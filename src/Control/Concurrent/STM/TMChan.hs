@@ -37,8 +37,7 @@ import Control.Monad.STM           (STM)
 import Control.Concurrent.STM.TVar
 import Control.Concurrent.STM.TChan -- N.B., GHC only
 
--- N.B., we need a Custom cabal build-type in order for this to
--- work.
+-- N.B., we need a Custom cabal build-type for this to work.
 #ifdef __HADDOCK__
 import Control.Monad.STM (atomically)
 import System.IO.Unsafe  (unsafePerformIO)
@@ -69,7 +68,7 @@ newTMChanIO = do
     return (TMChan closed chan)
 
 
--- | Write a value to a 'TMChan', blocking if the channel is full.
+-- | Write a value to a 'TMChan', retrying if the channel is full.
 -- If the channel is closed then the value is silently discarded.
 -- Use 'isClosedTMChan' to determine if the channel is closed before
 -- writing, as needed.
@@ -81,7 +80,7 @@ writeTMChan (TMChan closed chan) x = do
         else writeTChan chan x
 
 
--- | Read the next value from the 'TMChan', blocking if the channel
+-- | Read the next value from the 'TMChan', retrying if the channel
 -- is empty (and not closed). We return @Nothing@ immediately if
 -- the channel is closed and empty.
 readTMChan :: TMChan a -> STM (Maybe a)
@@ -92,7 +91,7 @@ readTMChan (TMChan closed chan) = do
 
 
 -- | Get the next value from the 'TMChan' without removing it,
--- blocking if the channel is empty.
+-- retrying if the channel is empty.
 peekTMChan :: TMChan a -> STM (Maybe a)
 peekTMChan (TMChan closed chan) = do
     b  <- isEmptyTChan chan

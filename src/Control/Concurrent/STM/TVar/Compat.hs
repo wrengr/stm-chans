@@ -35,7 +35,7 @@ import Control.Concurrent.STM.TVar
 import Control.Concurrent.STM (atomically)
 #endif
 
--- What version will these really be added?
+-- BUG: What version will these really be added?
 #if ! (MIN_VERSION_stm(9,0,0))
 import Control.Concurrent.STM (STM)
 #endif
@@ -55,7 +55,7 @@ readTVarIO = atomically . readTVar
 #endif
 
 
--- What version will these really be added?
+-- BUG: What version will these really be added?
 #if ! (MIN_VERSION_stm(9,0,0))
 
 -- Like 'modifyIORef' but for 'TVar'.

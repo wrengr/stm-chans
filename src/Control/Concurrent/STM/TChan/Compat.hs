@@ -40,7 +40,7 @@ module Control.Concurrent.STM.TChan.Compat
 
 import Control.Concurrent.STM.TChan -- N.B., GHC only
 
--- What version will these really be added?
+-- BUG: What version will these really be added?
 #if ! (MIN_VERSION_stm(9,0,0))
 import Control.Applicative ((<$>))
 import Control.Monad.STM   (STM)

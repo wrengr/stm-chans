@@ -28,13 +28,12 @@ module Control.Concurrent.STM.TBChan
     , isFullTBChan
     ) where
 
-import Data.Typeable                      (Typeable)
-import Control.Monad.STM                  (STM, retry)
+import Data.Typeable     (Typeable)
+import Control.Monad.STM (STM, retry)
 import Control.Concurrent.STM.TVar.Compat
 import Control.Concurrent.STM.TChan -- N.B., GHC only
 
--- N.B., we need a Custom cabal build-type in order for this to
--- work.
+-- N.B., we need a Custom cabal build-type for this to work.
 #ifdef __HADDOCK__
 import Control.Monad.STM (atomically)
 import System.IO.Unsafe  (unsafePerformIO)
@@ -44,12 +43,12 @@ import System.IO.Unsafe  (unsafePerformIO)
 -- | 'TBChan' is an abstract type representing a bounded FIFO
 -- channel.
 data TBChan a = TBChan !(TVar Int) !(TChan a)
-    deriving Typeable
+    deriving (Typeable)
 
 
 -- | Build and returns a new instance of 'TBChan' with the given
 -- capacity. /N.B./, we do not verify the capacity is positive, but
--- if it is non-positive then 'writeTBChan' will always block and
+-- if it is non-positive then 'writeTBChan' will always retry and
 -- 'isFullTBChan' will always be true.
 newTBChan :: Int -> STM (TBChan a)
 newTBChan n = do
@@ -68,7 +67,7 @@ newTBChanIO n = do
     return (TBChan limit chan)
 
 
--- | Write a value to a 'TBChan', blocking if the channel is full.
+-- | Write a value to a 'TBChan', retrying if the channel is full.
 writeTBChan :: TBChan a -> a -> STM ()
 writeTBChan self@(TBChan limit chan) x = do
     b <- isFullTBChan self
@@ -79,7 +78,7 @@ writeTBChan self@(TBChan limit chan) x = do
             modifyTVar' limit (subtract 1)
 
 
--- | Read the next value from the 'TBChan', blocking if the channel
+-- | Read the next value from the 'TBChan', retrying if the channel
 -- is empty.
 readTBChan :: TBChan a -> STM a
 readTBChan (TBChan limit chan) = do
@@ -89,7 +88,7 @@ readTBChan (TBChan limit chan) = do
 
 
 -- | Get the next value from the 'TBChan' without removing it,
--- blocking if the channel is empty.
+-- retrying if the channel is empty.
 peekTBChan :: TBChan a -> STM a
 peekTBChan (TBChan _limit chan) = do
     x <- readTChan chan

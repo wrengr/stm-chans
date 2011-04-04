@@ -36,8 +36,7 @@ import Control.Monad.STM                  (STM, retry)
 import Control.Concurrent.STM.TVar.Compat
 import Control.Concurrent.STM.TChan -- N.B., GHC only
 
--- N.B., we need a Custom cabal build-type in order for this to
--- work.
+-- N.B., we need a Custom cabal build-type for this to work.
 #ifdef __HADDOCK__
 import Control.Monad.STM (atomically)
 import System.IO.Unsafe  (unsafePerformIO)
@@ -52,7 +51,7 @@ data TBMChan a = TBMChan !(TVar Bool) !(TVar Int) !(TChan a)
 
 -- | Build and returns a new instance of 'TBMChan' with the given
 -- capacity. /N.B./, we do not verify the capacity is positive, but
--- if it is non-positive then 'writeTBMChan' will always block and
+-- if it is non-positive then 'writeTBMChan' will always retry and
 -- 'isFullTBMChan' will always be true.
 newTBMChan :: Int -> STM (TBMChan a)
 newTBMChan n = do
@@ -73,9 +72,10 @@ newTBMChanIO n = do
     return (TBMChan closed limit chan)
 
 
--- | Write a value to a 'TBMChan', blocking if the channel is full.
+-- | Write a value to a 'TBMChan', retrying if the channel is full.
 -- If the channel is closed then the value is silently discarded.
--- Use 'isClosedTBMChan' to determine if the channel is closed before writing, as needed.
+-- Use 'isClosedTBMChan' to determine if the channel is closed
+-- before writing, as needed.
 writeTBMChan :: TBMChan a -> a -> STM ()
 writeTBMChan self@(TBMChan closed limit chan) x = do
     b <- readTVar closed
@@ -90,7 +90,7 @@ writeTBMChan self@(TBMChan closed limit chan) x = do
                     modifyTVar' limit (subtract 1)
 
 
--- | Read the next value from the 'TBMChan', blocking if the channel
+-- | Read the next value from the 'TBMChan', retrying if the channel
 -- is empty (and not closed). We return @Nothing@ immediately if
 -- the channel is closed and empty.
 readTBMChan :: TBMChan a -> STM (Maybe a)
@@ -106,7 +106,7 @@ readTBMChan (TBMChan closed limit chan) = do
 
 
 -- | Get the next value from the 'TBMChan' without removing it,
--- blocking if the channel is empty.
+-- retrying if the channel is empty.
 peekTBMChan :: TBMChan a -> STM (Maybe a)
 peekTBMChan (TBMChan closed _limit chan) = do
     b  <- isEmptyTChan chan
