@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
 ----------------------------------------------------------------
---                                                    2011.03.06
+--                                                    2011.04.03
 -- |
 -- Module      :  Control.Concurrent.STM.TMChan
 -- Copyright   :  Copyright (c) 2011 wren ng thornton
@@ -17,30 +17,37 @@
 ----------------------------------------------------------------
 module Control.Concurrent.STM.TMChan
     (
-    -- * TMChans
+    -- * The TMChan type
       TMChan()
+    -- ** Creating TMChans
     , newTMChan
     , newTMChanIO
     , dupTMChan
+    -- ** Reading from TMChans
     , readTMChan
+    , tryReadTMChan
     , peekTMChan
+    , tryPeekTMChan
+    -- ** Writing to TMChans
     , writeTMChan
     , unGetTMChan
-    , isEmptyTMChan
+    -- ** Closing TMChans
     , closeTMChan
     , isClosedTMChan
+    -- ** Predicates
+    , isEmptyTMChan
     ) where
 
-import Data.Typeable               (Typeable)
-import Control.Applicative         ((<$>))
-import Control.Monad.STM           (STM)
-import Control.Concurrent.STM.TVar
-import Control.Concurrent.STM.TChan -- N.B., GHC only
+import Data.Typeable       (Typeable)
+import Control.Applicative ((<$>))
+import Control.Monad.STM   (STM)
+import Control.Concurrent.STM.TVar.Compat
+import Control.Concurrent.STM.TChan.Compat -- N.B., GHC only
 
 -- N.B., we need a Custom cabal build-type for this to work.
 #ifdef __HADDOCK__
-import Control.Monad.STM (atomically)
-import System.IO.Unsafe  (unsafePerformIO)
+import Control.Monad.STM   (atomically)
+import System.IO.Unsafe    (unsafePerformIO)
 #endif
 ----------------------------------------------------------------
 
@@ -68,16 +75,15 @@ newTMChanIO = do
     return (TMChan closed chan)
 
 
--- | Write a value to a 'TMChan', retrying if the channel is full.
--- If the channel is closed then the value is silently discarded.
--- Use 'isClosedTMChan' to determine if the channel is closed before
--- writing, as needed.
-writeTMChan :: TMChan a -> a -> STM ()
-writeTMChan (TMChan closed chan) x = do
-    b <- readTVar closed
-    if b
-        then return () -- discard silently
-        else writeTChan chan x
+-- | Duplicate a 'TMChan': the duplicate channel begins empty, but
+-- data written to either channel from then on will be available
+-- from both, and closing one copy will close them all. Hence this
+-- creates a kind of broadcast channel, where data written by anyone
+-- is seen by everyone else.
+dupTMChan :: TMChan a -> STM (TMChan a)
+dupTMChan (TMChan closed chan) = do
+    new_chan <- dupTChan chan
+    return (TMChan closed new_chan)
 
 
 -- | Read the next value from the 'TMChan', retrying if the channel
@@ -87,7 +93,22 @@ readTMChan :: TMChan a -> STM (Maybe a)
 readTMChan (TMChan closed chan) = do
     b  <- isEmptyTChan chan
     b' <- readTVar closed
-    if b && b' then return Nothing else Just <$> readTChan chan
+    if b && b'
+        then return Nothing
+        else Just <$> readTChan chan
+
+
+-- | A version of 'readTMChan' which does not retry. Instead it
+-- returns @Just Nothing@ if the channel is open but no value is
+-- available; it still returns @Nothing@ if the channel is closed
+-- and empty.
+tryReadTMChan :: TMChan a -> STM (Maybe (Maybe a))
+tryReadTMChan (TMChan closed chan) = do
+    b  <- isEmptyTChan chan
+    b' <- readTVar closed
+    if b && b'
+        then return Nothing
+        else Just <$> tryReadTChan chan
 
 
 -- | Get the next value from the 'TMChan' without removing it,
@@ -98,21 +119,32 @@ peekTMChan (TMChan closed chan) = do
     b' <- readTVar closed
     if b && b' 
         then return Nothing
-        else do
-            x <- readTChan chan
-            unGetTChan chan x
-            return (Just x)
+        else Just <$> peekTChan chan
 
 
--- | Duplicate a 'TMChan': the duplicate channel begins empty, but
--- data written to either channel from then on will be available
--- from both, and closing one copy will close them all. Hence this
--- creates a kind of broadcast channel, where data written by anyone
--- is seen by everyone else.
-dupTMChan :: TMChan a -> STM (TMChan a)
-dupTMChan (TMChan closed chan) = do
-    new_chan <- dupTChan chan
-    return (TMChan closed new_chan)
+-- | A version of 'peekTMChan' which does not retry. Instead it
+-- returns @Just Nothing@ if the channel is open but no value is
+-- available; it still returns @Nothing@ if the channel is closed
+-- and empty.
+tryPeekTMChan :: TMChan a -> STM (Maybe (Maybe a))
+tryPeekTMChan (TMChan closed chan) = do
+    b  <- isEmptyTChan chan
+    b' <- readTVar closed
+    if b && b' 
+        then return Nothing
+        else Just <$> tryPeekTChan chan
+
+
+-- | Write a value to a 'TMChan', retrying if the channel is full.
+-- If the channel is closed then the value is silently discarded.
+-- Use 'isClosedTMChan' to determine if the channel is closed before
+-- writing, as needed.
+writeTMChan :: TMChan a -> a -> STM ()
+writeTMChan (TMChan closed chan) x = do
+    b <- readTVar closed
+    if b
+        then return () -- discard silently
+        else writeTChan chan x
 
 
 -- | Put a data item back onto a channel, where it will be the next
@@ -127,12 +159,6 @@ unGetTMChan (TMChan closed chan) x = do
         else unGetTChan chan x
 
 
--- | Returns @True@ if the supplied 'TMChan' is empty.
-isEmptyTMChan :: TMChan a -> STM Bool
-isEmptyTMChan (TMChan _closed chan) =
-    isEmptyTChan chan
-
-
 -- | Closes the 'TMChan', preventing any further writes.
 closeTMChan :: TMChan a -> STM ()
 closeTMChan (TMChan closed _chan) =
@@ -143,6 +169,12 @@ closeTMChan (TMChan closed _chan) =
 isClosedTMChan :: TMChan a -> STM Bool
 isClosedTMChan (TMChan closed _chan) =
     readTVar closed
+
+
+-- | Returns @True@ if the supplied 'TMChan' is empty.
+isEmptyTMChan :: TMChan a -> STM Bool
+isEmptyTMChan (TMChan _closed chan) =
+    isEmptyTChan chan
 
 ----------------------------------------------------------------
 ----------------------------------------------------------- fin.

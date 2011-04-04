@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
 ----------------------------------------------------------------
---                                                    2011.03.06
+--                                                    2011.04.03
 -- |
 -- Module      :  Control.Concurrent.STM.TBChan
 -- Copyright   :  Copyright (c) 2011 wren ng thornton
@@ -15,15 +15,21 @@
 ----------------------------------------------------------------
 module Control.Concurrent.STM.TBChan
     (
-    -- * TBChans
+    -- * The TBChan type
       TBChan()
+    -- ** Creating TBChans
     , newTBChan
     , newTBChanIO
     -- I don't know how to define dupTBChan with the correct semantics
+    -- ** Reading from TBChans
     , readTBChan
+    , tryReadTBChan
     , peekTBChan
+    , tryPeekTBChan
+    -- ** Writing to TBChans
     , writeTBChan
     , unGetTBChan
+    -- ** Predicates
     , isEmptyTBChan
     , isFullTBChan
     ) where
@@ -31,7 +37,7 @@ module Control.Concurrent.STM.TBChan
 import Data.Typeable     (Typeable)
 import Control.Monad.STM (STM, retry)
 import Control.Concurrent.STM.TVar.Compat
-import Control.Concurrent.STM.TChan -- N.B., GHC only
+import Control.Concurrent.STM.TChan.Compat -- N.B., GHC only
 
 -- N.B., we need a Custom cabal build-type for this to work.
 #ifdef __HADDOCK__
@@ -67,17 +73,6 @@ newTBChanIO n = do
     return (TBChan limit chan)
 
 
--- | Write a value to a 'TBChan', retrying if the channel is full.
-writeTBChan :: TBChan a -> a -> STM ()
-writeTBChan self@(TBChan limit chan) x = do
-    b <- isFullTBChan self
-    if b
-        then retry
-        else do
-            writeTChan chan x
-            modifyTVar' limit (subtract 1)
-
-
 -- | Read the next value from the 'TBChan', retrying if the channel
 -- is empty.
 readTBChan :: TBChan a -> STM a
@@ -87,13 +82,41 @@ readTBChan (TBChan limit chan) = do
     return x
 
 
+-- | A version of 'readTBChan' which does not retry. Instead it
+-- returns @Nothing@ if no value is available.
+tryReadTBChan :: TBChan a -> STM (Maybe a)
+tryReadTBChan (TBChan limit chan) = do
+    mx <- tryReadTChan chan
+    case mx of
+        Nothing -> return Nothing
+        Just _x -> do
+            modifyTVar' limit (1 +)
+            return mx
+
+
 -- | Get the next value from the 'TBChan' without removing it,
 -- retrying if the channel is empty.
 peekTBChan :: TBChan a -> STM a
-peekTBChan (TBChan _limit chan) = do
-    x <- readTChan chan
-    unGetTChan chan x
-    return x
+peekTBChan (TBChan _limit chan) =
+    peekTChan chan
+
+
+-- | A version of 'peekTBChan' which does not retry. Instead it
+-- returns @Nothing@ if no value is available.
+tryPeekTBChan :: TBChan a -> STM (Maybe a)
+tryPeekTBChan (TBChan _limit chan) =
+    tryPeekTChan chan
+
+
+-- | Write a value to a 'TBChan', retrying if the channel is full.
+writeTBChan :: TBChan a -> a -> STM ()
+writeTBChan self@(TBChan limit chan) x = do
+    b <- isFullTBChan self
+    if b
+        then retry
+        else do
+            writeTChan chan x
+            modifyTVar' limit (subtract 1)
 
 
 -- | Put a data item back onto a channel, where it will be the next

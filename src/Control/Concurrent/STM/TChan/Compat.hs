@@ -11,13 +11,11 @@
 -- Portability :  non-portable (GHC STM, CPP)
 --
 -- Compatibility layer for older versions of the @stm@ library.
--- Actually, this isn't needed for the @stm-chans@ library. Rather
--- it's provided as a convenience for others. We define 'tryReadTChan',
--- 'peekTChan', and 'tryPeekTChan' which @stm-X.X.X@ lacks. These
--- implementations are less efficient than the package versions due
--- to the 'TChan' type being abstract. However, this module uses
--- Cabal-style CPP macros in order to use the package versions when
--- available.
+-- Namely, we define 'tryReadTChan', 'peekTChan', and 'tryPeekTChan'
+-- which @stm-X.X.X@ lacks. These implementations are less efficient
+-- than the package versions due to the 'TChan' type being abstract.
+-- However, this module uses Cabal-style CPP macros in order to use
+-- the package versions when available.
 ----------------------------------------------------------------
 module Control.Concurrent.STM.TChan.Compat
     (
@@ -32,10 +30,11 @@ module Control.Concurrent.STM.TChan.Compat
     , tryReadTChan -- :: TChan a -> STM (Maybe a)
     , peekTChan    -- :: TChan a -> STM a
     , tryPeekTChan -- :: TChan a -> STM (Maybe a)
-    , isEmptyTChan -- :: TChan a -> STM Bool
     -- ** Writing to TChans
     , unGetTChan   -- :: TChan a -> a -> STM ()
     , writeTChan   -- :: TChan a -> a -> STM ()
+    -- ** Predicates
+    , isEmptyTChan -- :: TChan a -> STM Bool
     ) where
 
 import Control.Concurrent.STM.TChan -- N.B., GHC only
