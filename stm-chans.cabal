@@ -1,0 +1,42 @@
+----------------------------------------------------------------
+-- wren ng thornton <wren@community.haskell.org>    ~ 2011.04.03
+----------------------------------------------------------------
+
+Name:           stm-chans
+Version:        1.0.0
+-- Source-Repository requires version 1.6
+Cabal-Version:  >= 1.6
+-- We need a custom build in order to define __HADDOCK__
+Build-Type:     Custom
+Stability:      experimental
+Copyright:      Copyright (c) 2011 wren ng thornton
+License:        BSD3
+License-File:   LICENSE
+Author:         wren ng thornton
+Maintainer:     wren@community.haskell.org
+Homepage:       http://code.haskell.org/~wren/
+Category:       System
+Synopsis:       Additional types of channels for STM.
+Description:    Additional types of channels for STM.
+
+Tested-With:    GHC == 6.12.1, GHC == 6.12.3
+Source-Repository head
+    Type:     darcs
+    Location: http://community.haskell.org/~wren/stm-chans
+
+----------------------------------------------------------------
+Library
+    -- Not sure what the real minbounds are for base and stm...
+    --
+    -- N.B., stm >= 2.1.2 is required for fast readTVarIO
+    Build-Depends: base >= 4.1 && < 5, stm >= 2.1.1
+    
+    Hs-Source-Dirs:  src
+    Exposed-Modules: Control.Concurrent.STM.TBChan
+                   , Control.Concurrent.STM.TBMChan
+                   , Control.Concurrent.STM.TMChan
+                   , Control.Concurrent.STM.TChan.Compat
+                   , Control.Concurrent.STM.TVar.Compat
+
+----------------------------------------------------------------
+----------------------------------------------------------- fin.
