@@ -32,8 +32,8 @@ module Control.Concurrent.STM.TBMChan
     , unGetTBMChan
     -- ** Closing TBMChans
     , closeTBMChan
-    , isClosedTBMChan
     -- ** Predicates
+    , isClosedTBMChan
     , isEmptyTBMChan
     , isFullTBMChan
     ) where
@@ -51,13 +51,13 @@ import System.IO.Unsafe    (unsafePerformIO)
 #endif
 ----------------------------------------------------------------
 
--- | 'TBMChan' is an abstract type representing a bounded closeable
+-- | @TBMChan@ is an abstract type representing a bounded closeable
 -- FIFO channel.
 data TBMChan a = TBMChan !(TVar Bool) !(TVar Int) !(TChan a)
     deriving Typeable
 
 
--- | Build and returns a new instance of 'TBMChan' with the given
+-- | Build and returns a new instance of @TBMChan@ with the given
 -- capacity. /N.B./, we do not verify the capacity is positive, but
 -- if it is non-positive then 'writeTBMChan' will always retry and
 -- 'isFullTBMChan' will always be true.
@@ -70,7 +70,7 @@ newTBMChan n = do
 
 
 -- | @IO@ version of 'newTBMChan'. This is useful for creating
--- top-level 'TBMChan's using 'unsafePerformIO', because using
+-- top-level @TBMChan@s using 'unsafePerformIO', because using
 -- 'atomically' inside 'unsafePerformIO' isn't possible.
 newTBMChanIO :: Int -> IO (TBMChan a)
 newTBMChanIO n = do
@@ -80,7 +80,7 @@ newTBMChanIO n = do
     return (TBMChan closed limit chan)
 
 
--- | Read the next value from the 'TBMChan', retrying if the channel
+-- | Read the next value from the @TBMChan@, retrying if the channel
 -- is empty (and not closed). We return @Nothing@ immediately if
 -- the channel is closed and empty.
 readTBMChan :: TBMChan a -> STM (Maybe a)
@@ -114,7 +114,7 @@ tryReadTBMChan (TBMChan closed limit chan) = do
                     return (Just mx)
 
 
--- | Get the next value from the 'TBMChan' without removing it,
+-- | Get the next value from the @TBMChan@ without removing it,
 -- retrying if the channel is empty.
 peekTBMChan :: TBMChan a -> STM (Maybe a)
 peekTBMChan (TBMChan closed _limit chan) = do
@@ -138,7 +138,7 @@ tryPeekTBMChan (TBMChan closed _limit chan) = do
         else Just <$> tryPeekTChan chan
 
 
--- | Write a value to a 'TBMChan', retrying if the channel is full.
+-- | Write a value to a @TBMChan@, retrying if the channel is full.
 -- If the channel is closed then the value is silently discarded.
 -- Use 'isClosedTBMChan' to determine if the channel is closed
 -- before writing, as needed.
@@ -172,28 +172,28 @@ unGetTBMChan (TBMChan closed limit chan) x = do
             modifyTVar' limit (subtract 1)
 
 
--- | Closes the 'TBMChan', preventing any further writes.
+-- | Closes the @TBMChan@, preventing any further writes.
 closeTBMChan :: TBMChan a -> STM ()
 closeTBMChan (TBMChan closed _limit _chan) =
     writeTVar closed True
 
 
--- | Returns @True@ if the supplied 'TBMChan' has been closed.
+-- | Returns @True@ if the supplied @TBMChan@ has been closed.
 isClosedTBMChan :: TBMChan a -> STM Bool
 isClosedTBMChan (TBMChan closed _limit _chan) =
     readTVar closed
 
 
--- | Returns @True@ if the supplied 'TBMChan' is empty (i.e., has
--- no elements). /N.B./, a 'TBMChan' can be both ``empty'' and
+-- | Returns @True@ if the supplied @TBMChan@ is empty (i.e., has
+-- no elements). /N.B./, a @TBMChan@ can be both ``empty'' and
 -- ``full'' at the same time, if the initial limit was non-positive.
 isEmptyTBMChan :: TBMChan a -> STM Bool
 isEmptyTBMChan (TBMChan _closed _limit chan) =
     isEmptyTChan chan
 
 
--- | Returns @True@ if the supplied 'TBMChan' is full (i.e., is
--- over its limit). /N.B./, a 'TBMChan' can be both ``empty'' and
+-- | Returns @True@ if the supplied @TBMChan@ is full (i.e., is
+-- over its limit). /N.B./, a @TBMChan@ can be both ``empty'' and
 -- ``full'' at the same time, if the initial limit was non-positive.
 isFullTBMChan :: TBMChan a -> STM Bool
 isFullTBMChan (TBMChan _closed limit _chan) = do

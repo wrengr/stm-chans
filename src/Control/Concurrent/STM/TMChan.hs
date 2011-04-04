@@ -33,8 +33,8 @@ module Control.Concurrent.STM.TMChan
     , unGetTMChan
     -- ** Closing TMChans
     , closeTMChan
-    , isClosedTMChan
     -- ** Predicates
+    , isClosedTMChan
     , isEmptyTMChan
     ) where
 
@@ -51,13 +51,13 @@ import System.IO.Unsafe    (unsafePerformIO)
 #endif
 ----------------------------------------------------------------
 
--- | 'TMChan' is an abstract type representing a closeable FIFO
+-- | @TMChan@ is an abstract type representing a closeable FIFO
 -- channel.
 data TMChan a = TMChan !(TVar Bool) !(TChan a)
     deriving Typeable
 
 
--- | Build and returns a new instance of 'TMChan'.
+-- | Build and returns a new instance of @TMChan@.
 newTMChan :: STM (TMChan a)
 newTMChan = do
     closed <- newTVar False
@@ -66,7 +66,7 @@ newTMChan = do
 
 
 -- | @IO@ version of 'newTMChan'. This is useful for creating
--- top-level 'TMChan's using 'unsafePerformIO', because using
+-- top-level @TMChan@s using 'unsafePerformIO', because using
 -- 'atomically' inside 'unsafePerformIO' isn't possible.
 newTMChanIO :: IO (TMChan a)
 newTMChanIO = do
@@ -75,7 +75,7 @@ newTMChanIO = do
     return (TMChan closed chan)
 
 
--- | Duplicate a 'TMChan': the duplicate channel begins empty, but
+-- | Duplicate a @TMChan@: the duplicate channel begins empty, but
 -- data written to either channel from then on will be available
 -- from both, and closing one copy will close them all. Hence this
 -- creates a kind of broadcast channel, where data written by anyone
@@ -86,7 +86,7 @@ dupTMChan (TMChan closed chan) = do
     return (TMChan closed new_chan)
 
 
--- | Read the next value from the 'TMChan', retrying if the channel
+-- | Read the next value from the @TMChan@, retrying if the channel
 -- is empty (and not closed). We return @Nothing@ immediately if
 -- the channel is closed and empty.
 readTMChan :: TMChan a -> STM (Maybe a)
@@ -111,7 +111,7 @@ tryReadTMChan (TMChan closed chan) = do
         else Just <$> tryReadTChan chan
 
 
--- | Get the next value from the 'TMChan' without removing it,
+-- | Get the next value from the @TMChan@ without removing it,
 -- retrying if the channel is empty.
 peekTMChan :: TMChan a -> STM (Maybe a)
 peekTMChan (TMChan closed chan) = do
@@ -135,7 +135,7 @@ tryPeekTMChan (TMChan closed chan) = do
         else Just <$> tryPeekTChan chan
 
 
--- | Write a value to a 'TMChan', retrying if the channel is full.
+-- | Write a value to a @TMChan@, retrying if the channel is full.
 -- If the channel is closed then the value is silently discarded.
 -- Use 'isClosedTMChan' to determine if the channel is closed before
 -- writing, as needed.
@@ -159,19 +159,19 @@ unGetTMChan (TMChan closed chan) x = do
         else unGetTChan chan x
 
 
--- | Closes the 'TMChan', preventing any further writes.
+-- | Closes the @TMChan@, preventing any further writes.
 closeTMChan :: TMChan a -> STM ()
 closeTMChan (TMChan closed _chan) =
     writeTVar closed True
 
 
--- | Returns @True@ if the supplied 'TMChan' has been closed.
+-- | Returns @True@ if the supplied @TMChan@ has been closed.
 isClosedTMChan :: TMChan a -> STM Bool
 isClosedTMChan (TMChan closed _chan) =
     readTVar closed
 
 
--- | Returns @True@ if the supplied 'TMChan' is empty.
+-- | Returns @True@ if the supplied @TMChan@ is empty.
 isEmptyTMChan :: TMChan a -> STM Bool
 isEmptyTMChan (TMChan _closed chan) =
     isEmptyTChan chan

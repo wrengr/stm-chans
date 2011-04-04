@@ -63,7 +63,7 @@ tryReadTChan (TChan read _write) = do
 -}
 
 
--- | Get the next value from the 'TChan' without removing it,
+-- | Get the next value from the @TChan@ without removing it,
 -- retrying if the channel is empty.
 peekTChan :: TChan a -> STM a
 peekTChan chan = do

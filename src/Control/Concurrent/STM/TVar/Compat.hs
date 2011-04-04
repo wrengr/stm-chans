@@ -17,15 +17,21 @@
 -- the package versions when available.
 ----------------------------------------------------------------
 module Control.Concurrent.STM.TVar.Compat
-    ( TVar
+    (
+    -- * The TVar type
+      TVar()
+    -- ** Creating TVars
     , newTVar       -- :: a -> STM (TVar a)
     , newTVarIO     -- :: a -> IO  (TVar a)
+    -- ** Reading from TVars
     , readTVar      -- :: TVar a -> STM a
     , readTVarIO    -- :: TVar a -> IO  a
+    -- ** Writing to TVars
     , writeTVar     -- :: TVar a -> a -> STM ()
     , modifyTVar    -- :: TVar a -> (a -> a) -> STM ()
     , modifyTVar'   -- :: TVar a -> (a -> a) -> STM ()
     , swapTVar      -- :: TVar a -> a -> STM a
+    -- ** Other capabilities
     , registerDelay -- :: Int -> IO (TVar Bool)
     ) where
 
@@ -58,8 +64,8 @@ readTVarIO = atomically . readTVar
 -- BUG: What version will these really be added?
 #if ! (MIN_VERSION_stm(9,0,0))
 
--- Like 'modifyIORef' but for 'TVar'.
--- | Mutate the contents of a 'TVar'. /N.B./, this version is
+-- Like 'modifyIORef' but for @TVar@.
+-- | Mutate the contents of a @TVar@. /N.B./, this version is
 -- non-strict.
 modifyTVar :: TVar a -> (a -> a) -> STM ()
 modifyTVar var f = do
@@ -76,8 +82,8 @@ modifyTVar' var f = do
 {-# INLINE modifyTVar' #-}
 
 
--- Like 'swapTMVar' but for 'TVar'.
--- | Swap the contents of a 'TVar' for a new value.
+-- Like 'swapTMVar' but for @TVar@.
+-- | Swap the contents of a @TVar@ for a new value.
 swapTVar :: TVar a -> a -> STM a
 swapTVar var new = do
     old <- readTVar var

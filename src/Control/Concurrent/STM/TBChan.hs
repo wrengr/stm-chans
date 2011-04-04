@@ -46,13 +46,13 @@ import System.IO.Unsafe  (unsafePerformIO)
 #endif
 ----------------------------------------------------------------
 
--- | 'TBChan' is an abstract type representing a bounded FIFO
+-- | @TBChan@ is an abstract type representing a bounded FIFO
 -- channel.
 data TBChan a = TBChan !(TVar Int) !(TChan a)
     deriving (Typeable)
 
 
--- | Build and returns a new instance of 'TBChan' with the given
+-- | Build and returns a new instance of @TBChan@ with the given
 -- capacity. /N.B./, we do not verify the capacity is positive, but
 -- if it is non-positive then 'writeTBChan' will always retry and
 -- 'isFullTBChan' will always be true.
@@ -64,7 +64,7 @@ newTBChan n = do
 
 
 -- | @IO@ version of 'newTBChan'. This is useful for creating
--- top-level 'TBChan's using 'unsafePerformIO', because using
+-- top-level @TBChan@s using 'unsafePerformIO', because using
 -- 'atomically' inside 'unsafePerformIO' isn't possible.
 newTBChanIO :: Int -> IO (TBChan a)
 newTBChanIO n = do
@@ -73,7 +73,7 @@ newTBChanIO n = do
     return (TBChan limit chan)
 
 
--- | Read the next value from the 'TBChan', retrying if the channel
+-- | Read the next value from the @TBChan@, retrying if the channel
 -- is empty.
 readTBChan :: TBChan a -> STM a
 readTBChan (TBChan limit chan) = do
@@ -94,7 +94,7 @@ tryReadTBChan (TBChan limit chan) = do
             return mx
 
 
--- | Get the next value from the 'TBChan' without removing it,
+-- | Get the next value from the @TBChan@ without removing it,
 -- retrying if the channel is empty.
 peekTBChan :: TBChan a -> STM a
 peekTBChan (TBChan _limit chan) =
@@ -108,7 +108,7 @@ tryPeekTBChan (TBChan _limit chan) =
     tryPeekTChan chan
 
 
--- | Write a value to a 'TBChan', retrying if the channel is full.
+-- | Write a value to a @TBChan@, retrying if the channel is full.
 writeTBChan :: TBChan a -> a -> STM ()
 writeTBChan self@(TBChan limit chan) x = do
     b <- isFullTBChan self
@@ -129,16 +129,16 @@ unGetTBChan (TBChan limit chan) x = do
     modifyTVar' limit (subtract 1)
 
 
--- | Returns @True@ if the supplied 'TBChan' is empty (i.e., has
--- no elements). /N.B./, a 'TBChan' can be both ``empty'' and
+-- | Returns @True@ if the supplied @TBChan@ is empty (i.e., has
+-- no elements). /N.B./, a @TBChan@ can be both ``empty'' and
 -- ``full'' at the same time, if the initial limit was non-positive.
 isEmptyTBChan :: TBChan a -> STM Bool
 isEmptyTBChan (TBChan _limit chan) =
     isEmptyTChan chan
 
 
--- | Returns @True@ if the supplied 'TBChan' is full (i.e., is over
--- its limit). /N.B./, a 'TBChan' can be both ``empty'' and ``full''
+-- | Returns @True@ if the supplied @TBChan@ is full (i.e., is over
+-- its limit). /N.B./, a @TBChan@ can be both ``empty'' and ``full''
 -- at the same time, if the initial limit was non-positive.
 isFullTBChan :: TBChan a -> STM Bool
 isFullTBChan (TBChan limit _chan) = do
