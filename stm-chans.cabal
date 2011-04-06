@@ -15,7 +15,7 @@ License-File:   LICENSE
 Author:         wren ng thornton
 Maintainer:     wren@community.haskell.org
 Homepage:       http://code.haskell.org/~wren/
-Category:       System
+Category:       Concurrency
 Synopsis:       Additional types of channels for STM.
 Description:    Additional types of channels for STM.
 
