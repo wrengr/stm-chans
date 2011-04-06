@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
 ----------------------------------------------------------------
---                                                    2011.04.03
+--                                                    2011.04.05
 -- |
 -- Module      :  Control.Concurrent.STM.TBChan
 -- Copyright   :  Copyright (c) 2011 wren ng thornton
@@ -28,6 +28,7 @@ module Control.Concurrent.STM.TBChan
     , tryPeekTBChan
     -- ** Writing to TBChans
     , writeTBChan
+    , tryWriteTBChan
     , unGetTBChan
     -- ** Predicates
     , isEmptyTBChan
@@ -117,6 +118,19 @@ writeTBChan self@(TBChan limit chan) x = do
         else do
             writeTChan chan x
             modifyTVar' limit (subtract 1)
+
+
+-- | A version of 'writeTBChan' which does not retry. Returns @True@
+-- if the value was successfully written, and @False@ otherwise.
+tryWriteTBChan :: TBChan a -> a -> STM Bool
+tryWriteTBChan self@(TBChan limit chan) x = do
+    b <- isFullTBChan self
+    if b
+        then return False
+        else do
+            writeTChan chan x
+            modifyTVar' limit (subtract 1)
+            return True
 
 
 -- | Put a data item back onto a channel, where it will be the next
