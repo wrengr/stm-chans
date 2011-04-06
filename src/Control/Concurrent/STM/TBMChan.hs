@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
 ----------------------------------------------------------------
---                                                    2011.04.03
+--                                                    2011.04.05
 -- |
 -- Module      :  Control.Concurrent.STM.TBMChan
 -- Copyright   :  Copyright (c) 2011 wren ng thornton
@@ -29,6 +29,7 @@ module Control.Concurrent.STM.TBMChan
     , tryPeekTBMChan
     -- ** Writing to TBMChans
     , writeTBMChan
+    , tryWriteTBMChan
     , unGetTBMChan
     -- ** Closing TBMChans
     , closeTBMChan
@@ -154,6 +155,25 @@ writeTBMChan self@(TBMChan closed limit chan) x = do
                 else do
                     writeTChan chan x
                     modifyTVar' limit (subtract 1)
+
+
+-- | A version of 'writeTBMChan' which does not retry. Returns
+-- @True@ if the value was successfully written, and @False@
+-- otherwise. Still discards the value silently if the channel is
+-- closed.
+tryWriteTBMChan :: TBMChan a -> a -> STM Bool
+tryWriteTBMChan self@(TBMChan closed limit chan) x = do
+    b <- readTVar closed
+    if b
+        then return () -- Discard silently
+        else do
+            b' <- isFullTBMChan self
+            if b'
+                then return False
+                else do
+                    writeTChan chan x
+                    modifyTVar' limit (subtract 1)
+                    return True
 
 
 -- | Put a data item back onto a channel, where it will be the next

@@ -1,3 +1,6 @@
+1.1.0 (2011-XX-XX):
+    - Control.Concurrent.STM.TBChan: added tryWriteTBChan
+    - Control.Concurrent.STM.TBMChan: added tryWriteTBMChan
 1.0.0 (2011-04-03):
     - Initial version forked from Posta-IPC.
     - Added tryRead* and tryPeek* functions for the various channels.
