@@ -153,7 +153,9 @@ isEmptyTBChan (TBChan _limit chan) =
 
 -- | Returns @True@ if the supplied @TBChan@ is full (i.e., is over
 -- its limit). /N.B./, a @TBChan@ can be both ``empty'' and ``full''
--- at the same time, if the initial limit was non-positive.
+-- at the same time, if the initial limit was non-positive. /N.B./,
+-- a @TBChan@ may still be full after reading, if 'unGetTBChan' was
+-- used to go over the initial limit.
 isFullTBChan :: TBChan a -> STM Bool
 isFullTBChan (TBChan limit _chan) = do
     n <- readTVar limit

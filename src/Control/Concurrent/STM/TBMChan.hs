@@ -215,6 +215,8 @@ isEmptyTBMChan (TBMChan _closed _limit chan) =
 -- | Returns @True@ if the supplied @TBMChan@ is full (i.e., is
 -- over its limit). /N.B./, a @TBMChan@ can be both ``empty'' and
 -- ``full'' at the same time, if the initial limit was non-positive.
+-- /N.B./, a @TBMChan@ may still be full after reading, if
+-- 'unGetTBMChan' was used to go over the initial limit.
 isFullTBMChan :: TBMChan a -> STM Bool
 isFullTBMChan (TBMChan _closed limit _chan) = do
     n <- readTVar limit
