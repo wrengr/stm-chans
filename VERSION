@@ -1,4 +1,4 @@
-1.1.0 (2011-XX-XX):
+1.1.0 (2011-04-05):
     - Control.Concurrent.STM.TBChan: added tryWriteTBChan
     - Control.Concurrent.STM.TBMChan: added tryWriteTBMChan
 1.0.0 (2011-04-03):
