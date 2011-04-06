@@ -157,23 +157,23 @@ writeTBMChan self@(TBMChan closed limit chan) x = do
                     modifyTVar' limit (subtract 1)
 
 
--- | A version of 'writeTBMChan' which does not retry. Returns
--- @True@ if the value was successfully written, and @False@
--- otherwise. Still discards the value silently if the channel is
--- closed.
-tryWriteTBMChan :: TBMChan a -> a -> STM Bool
+-- | A version of 'writeTBMChan' which does not retry. Returns @Just
+-- True@ if the value was successfully written, @Just False@ if it
+-- could not be written (but the channel was open), and @Nothing@
+-- if it was discarded (i.e., the channel was closed).
+tryWriteTBMChan :: TBMChan a -> a -> STM (Maybe Bool)
 tryWriteTBMChan self@(TBMChan closed limit chan) x = do
     b <- readTVar closed
     if b
-        then return () -- Discard silently
+        then return Nothing
         else do
             b' <- isFullTBMChan self
             if b'
-                then return False
+                then return (Just False)
                 else do
                     writeTChan chan x
                     modifyTVar' limit (subtract 1)
-                    return True
+                    return (Just True)
 
 
 -- | Put a data item back onto a channel, where it will be the next
