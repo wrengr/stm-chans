@@ -1,4 +1,4 @@
-{-# OPTIONS_GHC -Wall -fwarn-tabs -fno-warn-name-shadowing #-}
+{-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
 ----------------------------------------------------------------
 --                                                    2011.04.05
@@ -40,8 +40,12 @@ module Control.Concurrent.STM.TBChan2
     -- ** Predicates
     , isEmptyTBChan
     , isFullTBChan
+    -- ** Other functionality
+    , estimateFreeSlotsTBChan
+    , freeSlotsTBChan
     ) where
 
+import Prelude           hiding (reads)
 import Data.Typeable     (Typeable)
 import Control.Monad.STM (STM, retry)
 import Control.Concurrent.STM.TVar.Compat
@@ -126,17 +130,37 @@ tryPeekTBChan (TBChan _slots _reads chan) =
 -- | Write a value to a @TBChan@, retrying if the channel is full.
 writeTBChan :: TBChan a -> a -> STM ()
 writeTBChan self@(TBChan slots _reads chan) x = do
+    n <- estimateFreeSlotsTBChan self
+    if n <= 0
+        then retry
+        else do
+            writeTVar slots $! n - 1
+            writeTChan chan x
+{-
+-- The above saves one @readTVar slots@ compared to:
+writeTBChan self@(TBChan slots _reads chan) x = do
     b <- isFullTBChan self
     if b
         then retry
         else do
             modifyTVar' slots (subtract 1)
             writeTChan chan x
+-}
 
 
 -- | A version of 'writeTBChan' which does not retry. Returns @True@
 -- if the value was successfully written, and @False@ otherwise.
 tryWriteTBChan :: TBChan a -> a -> STM Bool
+tryWriteTBChan self@(TBChan slots _reads chan) x = do
+    n <- estimateFreeSlotsTBChan self
+    if n <= 0
+        then return False
+        else do
+            writeTVar slots $! n - 1
+            writeTChan chan x
+            return True
+{-
+-- The above saves one @readTVar slots@ compared to:
 tryWriteTBChan self@(TBChan slots _reads chan) x = do
     b <- isFullTBChan self
     if b
@@ -145,6 +169,7 @@ tryWriteTBChan self@(TBChan slots _reads chan) x = do
             modifyTVar' slots (subtract 1)
             writeTChan chan x
             return True
+-}
 
 
 -- | Put a data item back onto a channel, where it will be the next
@@ -181,6 +206,49 @@ isFullTBChan (TBChan slots reads _chan) = do
             writeTVar reads 0
             return $! n' <= 0
         else return False
+{-
+-- The above saves an extraneous comparison of n\/n' against 0
+-- compared to the more obvious:
+isFullTBChan self = do
+    n <- estimateFreeSlotsTBChan self
+    return $! n <= 0
+-}
+
+
+-- | Estimate the number of free slots. If the result is positive,
+-- then it's a minimum bound; if it's non-positive then it's exact.
+-- It will only be negative if the initial limit was negative or
+-- if 'unGetTBChan' was used to go over the initial limit.
+--
+-- This function always contends with writers, but only contends
+-- with readers when it has to; compare against 'freeSlotsTBChan'.
+estimateFreeSlotsTBChan :: TBChan a -> STM Int
+estimateFreeSlotsTBChan (TBChan slots reads _chan) = do
+    n <- readTVar slots
+    if n > 0
+        then return n
+        else do
+            m <- readTVar reads
+            let n' = n + m
+            writeTVar slots $! n'
+            writeTVar reads 0
+            return n'
+
+
+-- | Return the exact number of free slots. The result can be
+-- negative if the initial limit was negative or if 'unGetTBChan'
+-- was used to go over the initial limit.
+--
+-- This function always contends with both readers and writers;
+-- compare against 'estimateFreeSlotsTBChan'.
+freeSlotsTBChan :: TBChan a -> STM Int
+freeSlotsTBChan (TBChan slots reads _chan) = do
+    n <- readTVar slots
+    m <- readTVar reads
+    let n' = n + m
+    writeTVar slots $! n'
+    writeTVar reads 0
+    return n'
 
 ----------------------------------------------------------------
 ----------------------------------------------------------- fin.
