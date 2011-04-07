@@ -91,12 +91,20 @@ dupTMChan (TMChan closed chan) = do
 -- the channel is closed and empty.
 readTMChan :: TMChan a -> STM (Maybe a)
 readTMChan (TMChan closed chan) = do
-    -- TODO: make this lazier (i.e., read @b'@ only when @b == True@)
+    b <- readTVar closed
+    if b
+        then tryReadTChan chan
+        else Just <$> readTChan chan
+{-
+-- The above is lazier reading from @chan@, and slightly optimized, compared to the clearer:
+readTMChan (TMChan closed chan) = do
     b  <- isEmptyTChan chan
     b' <- readTVar closed
     if b && b'
         then return Nothing
         else Just <$> readTChan chan
+-- TODO: compare Core and benchmarks; is the loss of clarity worth it?
+-}
 
 
 -- | A version of 'readTMChan' which does not retry. Instead it
@@ -105,24 +113,44 @@ readTMChan (TMChan closed chan) = do
 -- and empty.
 tryReadTMChan :: TMChan a -> STM (Maybe (Maybe a))
 tryReadTMChan (TMChan closed chan) = do
-    -- TODO: make this lazier (i.e., read @b'@ only when @b == True@)
+    b <- readTVar closed
+    if b
+        then fmap Just <$> tryReadTChan chan
+        else Just <$> tryReadTChan chan
+{-
+-- The above is lazier reading from @chan@ (and removes an extraneous isEmptyTChan when using the compatibility layer) than the clearer:
+tryReadTMChan (TMChan closed chan) = do
     b  <- isEmptyTChan chan
     b' <- readTVar closed
     if b && b'
         then return Nothing
         else Just <$> tryReadTChan chan
+-- TODO: compare Core and benchmarks; is the loss of clarity worth it?
+-}
 
 
 -- | Get the next value from the @TMChan@ without removing it,
 -- retrying if the channel is empty.
 peekTMChan :: TMChan a -> STM (Maybe a)
 peekTMChan (TMChan closed chan) = do
-    -- TODO: make this lazier (i.e., read @b'@ only when @b == True@)
+    b <- readTVar closed
+    if b
+        then do
+            b' <- isEmptyTChan chan
+            if b'
+                then return Nothing
+                else Just <$> peekTChan chan
+        else Just <$> peekTChan chan
+{-
+-- The above is lazier reading from @chan@ than the clearer:
+peekTMChan (TMChan closed chan) = do
     b  <- isEmptyTChan chan
     b' <- readTVar closed
     if b && b' 
         then return Nothing
         else Just <$> peekTChan chan
+-- TODO: compare Core and benchmarks; is the loss of clarity worth it?
+-}
 
 
 -- | A version of 'peekTMChan' which does not retry. Instead it
@@ -131,12 +159,20 @@ peekTMChan (TMChan closed chan) = do
 -- and empty.
 tryPeekTMChan :: TMChan a -> STM (Maybe (Maybe a))
 tryPeekTMChan (TMChan closed chan) = do
-    -- TODO: make this lazier (i.e., read @b'@ only when @b == True@)
+    b <- readTVar closed
+    if b
+        then fmap Just <$> tryPeekTChan chan
+        else Just <$> tryPeekTChan chan
+{-
+-- The above is lazier reading from @chan@ (and removes an extraneous isEmptyTChan when using the compatibility layer) than the clearer:
+tryPeekTMChan (TMChan closed chan) = do
     b  <- isEmptyTChan chan
     b' <- readTVar closed
     if b && b' 
         then return Nothing
         else Just <$> tryPeekTChan chan
+-- TODO: compare Core and benchmarks; is the loss of clarity worth it?
+-}
 
 
 -- | Write a value to a @TMChan@, retrying if the channel is full.
@@ -173,6 +209,13 @@ closeTMChan (TMChan closed _chan) =
 isClosedTMChan :: TMChan a -> STM Bool
 isClosedTMChan (TMChan closed _chan) =
     readTVar closed
+
+{-
+-- | Returns @True@ if the supplied @TMChan@ has been closed.
+isClosedTMChanIO :: TMChan a -> IO Bool
+isClosedTMChanIO (TMChan closed _chan) =
+    readTVarIO closed
+-}
 
 
 -- | Returns @True@ if the supplied @TMChan@ is empty.
