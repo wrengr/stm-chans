@@ -107,15 +107,32 @@ newTBMChanIO n = do
 -- the channel is closed and empty.
 readTBMChan :: TBMChan a -> STM (Maybe a)
 readTBMChan (TBMChan closed _slots reads chan) = do
-    -- TODO: make this lazier (i.e., read @b'@ only when @b == True@)
-    b  <- isEmptyTChan chan
-    b' <- readTVar closed
+    b <- readTVar closed
+    if b
+        then do
+            mx <- tryReadTChan chan
+            case mx of
+                Nothing -> return mx
+                Just _x -> do
+                    modifyTVar' reads (1 +)
+                    return mx
+        else do
+            x <- readTChan chan
+            modifyTVar' reads (1 +)
+            return (Just x)
+{- 
+-- The above is slightly optimized over the clearer:
+readTBMChan (TBMChan closed _slots reads chan) =
+    b  <- readTVar closed
+    b' <- isEmptyTChan chan
     if b && b'
         then return Nothing
         else do
             x <- readTChan chan
             modifyTVar' reads (1 +)
             return (Just x)
+-- TODO: compare Core and benchmarks; is the loss of clarity worth it?
+-}
 
 
 -- | A version of 'readTBMChan' which does not retry. Instead it
@@ -124,30 +141,62 @@ readTBMChan (TBMChan closed _slots reads chan) = do
 -- and empty.
 tryReadTBMChan :: TBMChan a -> STM (Maybe (Maybe a))
 tryReadTBMChan (TBMChan closed _slots reads chan) = do
-    -- TODO: make this lazier (i.e., read @b'@ only when @b == True@)
-    b  <- isEmptyTChan chan
-    b' <- readTVar closed
-    if b && b'
-        then return Nothing
-        else do
+    b <- readTVar closed
+    if b
+        then do
             mx <- tryReadTChan chan
             case mx of
-                Nothing -> return (Just Nothing)
+                Nothing -> return Nothing
                 Just _x -> do
                     modifyTVar' reads (1 +)
                     return (Just mx)
+        else do
+            mx <- tryReadTChan chan
+            case mx of
+                Nothing -> return (Just mx)
+                Just _x -> do
+                    modifyTVar' reads (1 +)
+                    return (Just mx)
+{- 
+-- The above is slightly optimized over the clearer:
+tryReadTBMChan (TBMChan closed _slots reads chan) =
+    b  <- readTVar closed
+    b' <- isEmptyTChan chan
+    if b && b'
+        then return Nothing
+        else do
+            mx <- tryReadTBMChan chan
+            case mx of
+                Nothing -> return (Just mx)
+                Just _x -> do
+                    modifyTVar' reads (1 +)
+                    return (Just mx)
+-- TODO: compare Core and benchmarks; is the loss of clarity worth it?
+-}
 
 
 -- | Get the next value from the @TBMChan@ without removing it,
 -- retrying if the channel is empty.
 peekTBMChan :: TBMChan a -> STM (Maybe a)
 peekTBMChan (TBMChan closed _slots _reads chan) = do
-    -- TODO: make this lazier (i.e., read @b'@ only when @b == True@)
+    b <- readTVar closed
+    if b
+        then do
+            b' <- isEmptyTChan chan
+            if b'
+                then return Nothing
+                else Just <$> peekTChan chan
+        else Just <$> peekTChan chan
+{-
+-- The above is lazier reading from @chan@ than the clearer:
+peekTBMChan (TBMChan closed _slots _reads chan) = do
     b  <- isEmptyTChan chan
     b' <- readTVar closed
     if b && b' 
         then return Nothing
         else Just <$> peekTChan chan
+-- TODO: compare Core and benchmarks; is the loss of clarity worth it?
+-}
 
 
 -- | A version of 'peekTBMChan' which does not retry. Instead it
@@ -156,12 +205,20 @@ peekTBMChan (TBMChan closed _slots _reads chan) = do
 -- and empty.
 tryPeekTBMChan :: TBMChan a -> STM (Maybe (Maybe a))
 tryPeekTBMChan (TBMChan closed _slots _reads chan) = do
-    -- TODO: make this lazier (i.e., read @b'@ only when @b == True@)
+    b <- readTVar closed
+    if b
+        then fmap Just <$> tryPeekTChan chan
+        else Just <$> tryPeekTChan chan
+{-
+-- The above is lazier reading from @chan@ (and removes an extraneous isEmptyTChan when using the compatibility layer) than the clearer:
+tryPeekTBMChan (TBMChan closed _slots _reads chan) = do
     b  <- isEmptyTChan chan
     b' <- readTVar closed
     if b && b' 
         then return Nothing
         else Just <$> tryPeekTChan chan
+-- TODO: compare Core and benchmarks; is the loss of clarity worth it?
+-}
 
 
 -- | Write a value to a @TBMChan@, retrying if the channel is full.
