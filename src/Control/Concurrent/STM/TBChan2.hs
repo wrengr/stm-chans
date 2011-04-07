@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
 ----------------------------------------------------------------
---                                                    2011.04.05
+--                                                    2011.04.06
 -- |
 -- Module      :  Control.Concurrent.STM.TBChan2
 -- Copyright   :  Copyright (c) 2011 wren ng thornton
@@ -16,9 +16,10 @@
 -- contention between readers and writers.
 --
 -- TODO: still need to benchmark this to verify Thomas' performance
--- numbers (though they're surely true). Once that's done, this
--- should replace Control.Concurrent.STM.TBChan and add Thomas to
--- the AUTHORS file. Also, reimplement TBMChan to follow suit.
+-- numbers (though they're surely true). Also, re-verify correctness
+-- to be sure no bugs have crept in. Once that's done, this should
+-- replace Control.Concurrent.STM.TBChan and add Thomas to the
+-- AUTHORS file.
 ----------------------------------------------------------------
 module Control.Concurrent.STM.TBChan2
     (
@@ -195,6 +196,8 @@ isEmptyTBChan (TBChan _slots _reads chan) =
 -- at the same time, if the initial limit was non-positive. /N.B./,
 -- a @TBChan@ may still be full after reading, if 'unGetTBChan' was
 -- used to go over the initial limit.
+--
+-- This is equivalent to: @liftM (<= 0) estimateFreeSlotsTBMChan@
 isFullTBChan :: TBChan a -> STM Bool
 isFullTBChan (TBChan slots reads _chan) = do
     n <- readTVar slots

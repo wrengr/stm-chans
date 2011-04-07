@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
 ----------------------------------------------------------------
---                                                    2011.04.03
+--                                                    2011.04.06
 -- |
 -- Module      :  Control.Concurrent.STM.TMChan
 -- Copyright   :  Copyright (c) 2011 wren ng thornton
@@ -91,6 +91,7 @@ dupTMChan (TMChan closed chan) = do
 -- the channel is closed and empty.
 readTMChan :: TMChan a -> STM (Maybe a)
 readTMChan (TMChan closed chan) = do
+    -- TODO: make this lazier (i.e., read @b'@ only when @b == True@)
     b  <- isEmptyTChan chan
     b' <- readTVar closed
     if b && b'
@@ -104,6 +105,7 @@ readTMChan (TMChan closed chan) = do
 -- and empty.
 tryReadTMChan :: TMChan a -> STM (Maybe (Maybe a))
 tryReadTMChan (TMChan closed chan) = do
+    -- TODO: make this lazier (i.e., read @b'@ only when @b == True@)
     b  <- isEmptyTChan chan
     b' <- readTVar closed
     if b && b'
@@ -115,6 +117,7 @@ tryReadTMChan (TMChan closed chan) = do
 -- retrying if the channel is empty.
 peekTMChan :: TMChan a -> STM (Maybe a)
 peekTMChan (TMChan closed chan) = do
+    -- TODO: make this lazier (i.e., read @b'@ only when @b == True@)
     b  <- isEmptyTChan chan
     b' <- readTVar closed
     if b && b' 
@@ -128,6 +131,7 @@ peekTMChan (TMChan closed chan) = do
 -- and empty.
 tryPeekTMChan :: TMChan a -> STM (Maybe (Maybe a))
 tryPeekTMChan (TMChan closed chan) = do
+    -- TODO: make this lazier (i.e., read @b'@ only when @b == True@)
     b  <- isEmptyTChan chan
     b' <- readTVar closed
     if b && b' 
