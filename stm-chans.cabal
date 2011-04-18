@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- wren ng thornton <wren@community.haskell.org>    ~ 2011.04.06
+-- wren ng thornton <wren@community.haskell.org>    ~ 2011.04.17
 ----------------------------------------------------------------
 
 Name:           stm-chans
@@ -31,16 +31,17 @@ Library
     -- N.B., stm >= 2.1.2 is required for fast readTVarIO. And
     -- stm >= ?.?.? is required for fast tryReadTChan, peekTChan,
     -- tryPeekTChan.
-    Build-Depends: base >= 4.1 && < 5, stm >= 2.1.1
+    Build-Depends: base >= 4.1 && < 5
+                 , stm  >= 2.1.1
     
     Hs-Source-Dirs:  src
     Exposed-Modules: Control.Concurrent.STM.TBChan
+                   -- Control.Concurrent.STM.TBChan2
                    , Control.Concurrent.STM.TBMChan
                    , Control.Concurrent.STM.TMChan
+                   -- Control.Concurrent.STM.TBMChan2
                    , Control.Concurrent.STM.TChan.Compat
                    , Control.Concurrent.STM.TVar.Compat
-    Other-Modules:   Control.Concurrent.STM.TBChan2
-                   , Control.Concurrent.STM.TBMChan2
 
 ----------------------------------------------------------------
 ----------------------------------------------------------- fin.

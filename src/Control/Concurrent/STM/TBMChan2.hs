@@ -17,11 +17,8 @@
 -- @bounded-tchan@ package in order to reduce contention between
 -- readers and writers.
 --
--- TODO: still need to benchmark this to verify Thomas' performance
--- numbers (though they're surely true). Also, re-verify correctness
--- to be sure no bugs have crept in. Once that's done, this should
--- replace Control.Concurrent.STM.TBMChan and add Thomas to the
--- AUTHORS file.
+-- Despite Thomas' performance numbers, this appears to have the
+-- same cost as the original version. I wonder why that is...
 ----------------------------------------------------------------
 module Control.Concurrent.STM.TBMChan2
     (

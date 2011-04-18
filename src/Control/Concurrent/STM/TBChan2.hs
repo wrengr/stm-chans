@@ -15,11 +15,8 @@
 -- M. DuBuisson's @bounded-tchan@ package in order to reduce
 -- contention between readers and writers.
 --
--- TODO: still need to benchmark this to verify Thomas' performance
--- numbers (though they're surely true). Also, re-verify correctness
--- to be sure no bugs have crept in. Once that's done, this should
--- replace Control.Concurrent.STM.TBChan and add Thomas to the
--- AUTHORS file.
+-- Despite Thomas' performance numbers, this appears to have the
+-- same cost as the original version. I wonder why that is...
 ----------------------------------------------------------------
 module Control.Concurrent.STM.TBChan2
     (
@@ -138,6 +135,10 @@ writeTBChan self@(TBChan slots _reads chan) x = do
             writeTVar slots $! n - 1
             writeTChan chan x
 {-
+-- The above comparison is unnecessary on one of the n>0 branches
+-- coming from estimateFreeSlotsTBChan. But for some reason, trying
+-- to remove it can cause BlockedIndefinatelyOnSTM exceptions.
+
 -- The above saves one @readTVar slots@ compared to:
 writeTBChan self@(TBChan slots _reads chan) x = do
     b <- isFullTBChan self
@@ -161,6 +162,10 @@ tryWriteTBChan self@(TBChan slots _reads chan) x = do
             writeTChan chan x
             return True
 {-
+-- The above comparison is unnecessary on one of the n>0 branches
+-- coming from estimateFreeSlotsTBChan. But for some reason, trying
+-- to remove it can cause BlockedIndefinatelyOnSTM exceptions.
+
 -- The above saves one @readTVar slots@ compared to:
 tryWriteTBChan self@(TBChan slots _reads chan) x = do
     b <- isFullTBChan self
