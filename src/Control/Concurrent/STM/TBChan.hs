@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
 ----------------------------------------------------------------
---                                                    2011.04.05
+--                                                    2011.04.17
 -- |
 -- Module      :  Control.Concurrent.STM.TBChan
 -- Copyright   :  Copyright (c) 2011 wren ng thornton
@@ -33,6 +33,8 @@ module Control.Concurrent.STM.TBChan
     -- ** Predicates
     , isEmptyTBChan
     , isFullTBChan
+    -- ** Other functionality
+    , freeSlotsTBChan
     ) where
 
 import Data.Typeable     (Typeable)
@@ -160,6 +162,14 @@ isFullTBChan :: TBChan a -> STM Bool
 isFullTBChan (TBChan limit _chan) = do
     n <- readTVar limit
     return $! n <= 0
+
+
+-- | Return the exact number of free slots. The result can be
+-- negative if the initial limit was negative or if 'unGetTBChan'
+-- was used to go over the initial limit.
+freeSlotsTBChan :: TBChan a -> STM Int
+freeSlotsTBChan (TBChan limit _chan) =
+    readTVar limit
 
 ----------------------------------------------------------------
 ----------------------------------------------------------- fin.
