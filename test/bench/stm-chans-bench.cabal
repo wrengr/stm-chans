@@ -35,6 +35,7 @@ Flag threaded
 
 ----------------------------------------------------------------
 Executable bench-TBChan
+    GHC-Options: -fforce-recomp
     if flag(threaded)
         GHC-Options: -threaded
     

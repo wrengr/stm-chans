@@ -50,10 +50,10 @@ module TBChanBench (main) where
 import Criterion
 import Criterion.Main
 import Control.Concurrent.STM
-import qualified Control.Concurrent.STM.TBChan   as B1
-import qualified Control.Concurrent.STM.TBChan2  as B2
-import qualified Control.Concurrent.STM.TBMChan  as BM1
-import qualified Control.Concurrent.STM.TBMChan2 as BM2
+import qualified Control.Concurrent.STM.TBChan1  as B1
+import qualified Control.Concurrent.STM.TBChan   as B2
+import qualified Control.Concurrent.STM.TBMChan1 as BM1
+import qualified Control.Concurrent.STM.TBMChan  as BM2
 import Control.Concurrent                        (forkIO)
 import Control.Monad                             (replicateM_)
 
@@ -111,7 +111,9 @@ main = defaultMain
     where times = 100000
 
 ----------------------------------------------------------------
------ Copied from bounded-tchan-0.2.2:Control.Concurrent.STM.BTChan (not using the package itself because it doesn't compile on older GHCs due to no Applicative STM instance).
+----- Copied from bounded-tchan-0.2.2:Control.Concurrent.STM.BTChan
+-- (not using the package itself because it doesn't compile on older
+-- GHCs due to no Applicative STM instance).
 
 data BTChan a = BTChan
     { maxSize   :: {-# UNPACK #-} !Int
@@ -151,31 +153,5 @@ readBTChan (BTChan _ c rdTV wrTV) = do
     writeTVar rdTV sz'
     return x
 
-----------------------------------------------------------------
-{- On the most recent run, with -fthreaded and times=100000 :
-
-* TBChan-10:     239.1154 ms +/- 9.015134 ms
-* TBChan-100:    187.4810 ms +/- 8.778359 ms
-* TBChan-1000:   186.2068 ms +/- 9.278518 ms
-
-* TBChan2-10:    241.3167 ms +/- 9.718021 ms
-* TBChan2-100:   187.8761 ms +/- 5.652408 ms
-* TBChan2-1000:  188.0624 ms +/- 6.523334 ms
-
-* BTChan-10:     236.4738 ms +/- 10.24673 ms
-* BTChan-100:    184.4301 ms +/- 8.158448 ms
-* BTChan-1000:   185.0646 ms +/- 8.185100 ms
-
-
-* TBMChan-10:    274.8709 ms +/- 11.01923 ms
-* TBMChan-100:   216.6476 ms +/- 6.443122 ms
-* TBMChan-1000:  213.6817 ms +/- 5.679679 ms
-
-* TBMChan2-10:   275.2378 ms +/- 10.04612 ms
-* TBMChan2-100:  212.5276 ms +/- 4.850145 ms
-* TBMChan2-1000: 210.9640 ms +/- 5.708563 ms
-
-Which suggests that they're about even. I wonder what's different?
--}
 ----------------------------------------------------------------
 ----------------------------------------------------------- fin.

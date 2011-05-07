@@ -6,14 +6,9 @@
 
 * Try to get the newest/final version of this package folded into "stm".
 
-* Incorporate things from http://hackage.haskell.org/package/bounded-tchan
+* Possibly incorporate more things from http://hackage.haskell.org/package/bounded-tchan
 
     For example, On 4/3/11 11:58 PM, Thomas DuBuisson wrote:
-    > 1) Split the reader counter and writer counters as I've done
-    > in bounded-tchan. This gives 2-5 times better performance (I
-    > benchmarked using Criterion, a single reader, a single writer,
-    > and tested channels with bounds of 10, 100, and 1000 elements).
-    > 
     > 3) Implement a "sizeOfTBChan". This would require an extra
     > word to store the max size in addition to the counter (vs
     > what you have of a single counter counting down from the

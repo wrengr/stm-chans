@@ -1,5 +1,8 @@
-1.2.0 (2011-XX-XX):
+1.2.0 (2011-05-07):
     - Various optimizations.
+    - Switched to using 2 TVars in TBChan and TBMChan, reducing
+      contention between readers and writers and improving throughput
+      considerably (when multiple OS threads are used).
 1.1.0 (2011-04-05):
     - Control.Concurrent.STM.TBChan: added tryWriteTBChan
     - Control.Concurrent.STM.TBMChan: added tryWriteTBMChan

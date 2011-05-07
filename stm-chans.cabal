@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- wren ng thornton <wren@community.haskell.org>    ~ 2011.04.17
+-- wren ng thornton <wren@community.haskell.org>    ~ 2011.05.07
 ----------------------------------------------------------------
 
 Name:           stm-chans
@@ -12,7 +12,7 @@ Stability:      experimental
 Copyright:      Copyright (c) 2011 wren ng thornton
 License:        BSD3
 License-File:   LICENSE
-Author:         wren ng thornton
+Author:         wren ng thornton, Thomas DuBuisson
 Maintainer:     wren@community.haskell.org
 Homepage:       http://code.haskell.org/~wren/
 Category:       Concurrency
@@ -36,10 +36,8 @@ Library
     
     Hs-Source-Dirs:  src
     Exposed-Modules: Control.Concurrent.STM.TBChan
-                   -- Control.Concurrent.STM.TBChan2
                    , Control.Concurrent.STM.TBMChan
                    , Control.Concurrent.STM.TMChan
-                   -- Control.Concurrent.STM.TBMChan2
                    , Control.Concurrent.STM.TChan.Compat
                    , Control.Concurrent.STM.TVar.Compat
 
