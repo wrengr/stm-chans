@@ -3,6 +3,10 @@
     - Switched to using 2 TVars in TBChan and TBMChan, reducing
       contention between readers and writers and improving throughput
       considerably (when multiple OS threads are used).
+    - Control.Concurrent.STM.TBChan: added estimateFreeSlotsTBChan,
+      freeSlotsTBChan
+    - Control.Concurrent.STM.TBMChan: added estimateFreeSlotsTBMChan,
+      freeSlotsTBMChan
 1.1.0 (2011-04-05):
     - Control.Concurrent.STM.TBChan: added tryWriteTBChan
     - Control.Concurrent.STM.TBMChan: added tryWriteTBMChan
