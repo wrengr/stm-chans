@@ -1,3 +1,5 @@
+1.2.0.1 (2011-05-07):
+    - Moved old TBChan,TBMChan implementations to ./test/bench/
 1.2.0 (2011-05-07):
     - Various optimizations.
     - Switched to using 2 TVars in TBChan and TBMChan, reducing
