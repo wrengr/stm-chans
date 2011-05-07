@@ -3,7 +3,7 @@
 ----------------------------------------------------------------
 
 Name:           stm-chans
-Version:        1.2.0
+Version:        1.2.0.1
 -- Source-Repository requires version 1.6
 Cabal-Version:  >= 1.6
 -- We need a custom build in order to define __HADDOCK__
