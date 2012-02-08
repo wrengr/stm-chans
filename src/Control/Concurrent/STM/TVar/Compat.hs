@@ -42,6 +42,8 @@ import Control.Concurrent.STM (atomically)
 #endif
 
 -- BUG: What version will these really be added?
+-- <http://hackage.haskell.org/trac/ghc/ticket/5104>
+-- <http://www.haskell.org/pipermail/cvs-libraries/2011-April/012914.html>
 #if ! (MIN_VERSION_stm(9,0,0))
 import Control.Concurrent.STM (STM)
 #endif

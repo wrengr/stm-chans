@@ -40,6 +40,8 @@ module Control.Concurrent.STM.TChan.Compat
 import Control.Concurrent.STM.TChan -- N.B., GHC only
 
 -- BUG: What version will these really be added?
+-- <http://hackage.haskell.org/trac/ghc/ticket/5104>
+-- <http://www.haskell.org/pipermail/cvs-libraries/2011-April/012914.html>
 #if ! (MIN_VERSION_stm(9,0,0))
 import Control.Applicative ((<$>))
 import Control.Monad.STM   (STM)
