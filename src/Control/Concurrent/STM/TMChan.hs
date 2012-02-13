@@ -1,10 +1,10 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
 ----------------------------------------------------------------
---                                                    2011.04.06
+--                                                    2012.02.12
 -- |
 -- Module      :  Control.Concurrent.STM.TMChan
--- Copyright   :  Copyright (c) 2011 wren ng thornton
+-- Copyright   :  Copyright (c) 2011--2012 wren ng thornton
 -- License     :  BSD
 -- Maintainer  :  wren@community.haskell.org
 -- Stability   :  experimental
@@ -175,10 +175,9 @@ tryPeekTMChan (TMChan closed chan) = do
 -}
 
 
--- | Write a value to a @TMChan@, retrying if the channel is full.
--- If the channel is closed then the value is silently discarded.
--- Use 'isClosedTMChan' to determine if the channel is closed before
--- writing, as needed.
+-- | Write a value to a @TMChan@. If the channel is closed then the
+-- value is silently discarded. Use 'isClosedTMChan' to determine
+-- if the channel is closed before writing, as needed.
 writeTMChan :: TMChan a -> a -> STM ()
 writeTMChan (TMChan closed chan) x = do
     b <- readTVar closed
