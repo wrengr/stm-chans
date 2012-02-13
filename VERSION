@@ -1,3 +1,5 @@
+1.2.0.3 (2012-02-12):
+    - Change stability from experimental to provisional.
 1.2.0.2 (2012-02-12):
     - Documentation fix for Control.Concurrent.STM.TMChan.writeTMChan
 1.2.0.1 (2011-05-07):

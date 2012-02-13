@@ -7,7 +7,7 @@
 -- Copyright   :  Copyright (c) 2011--2012 wren ng thornton
 -- License     :  BSD
 -- Maintainer  :  wren@community.haskell.org
--- Stability   :  experimental
+-- Stability   :  provisional
 -- Portability :  non-portable (STM, CPP)
 --
 -- Compatibility layer for older versions of the @stm@ library.
