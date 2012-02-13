@@ -4,7 +4,7 @@
 --                                                    2011.04.06
 -- |
 -- Module      :  Control.Concurrent.STM.TBMChan
--- Copyright   :  Copyright (c) 2011 wren ng thornton
+-- Copyright   :  Copyright (c) 2011--2012 wren ng thornton
 -- License     :  BSD
 -- Maintainer  :  wren@community.haskell.org
 -- Stability   :  experimental

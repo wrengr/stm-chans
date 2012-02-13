@@ -9,7 +9,7 @@ Cabal-Version:  >= 1.6
 Build-Type:     Custom
 
 Name:           stm-chans
-Version:        1.2.0.3
+Version:        1.2.0.2
 Stability:      experimental
 Homepage:       http://code.haskell.org/~wren/
 Author:         wren ng thornton, Thomas DuBuisson

@@ -1,3 +1,5 @@
+1.2.0.2 (2012-02-12):
+    - Documentation fix for Control.Concurrent.STM.TMChan.writeTMChan
 1.2.0.1 (2011-05-07):
     - Moved old TBChan,TBMChan implementations to ./test/bench/
 1.2.0 (2011-05-07):
