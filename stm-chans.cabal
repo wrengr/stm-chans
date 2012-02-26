@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- wren ng thornton <wren@community.haskell.org>    ~ 2012.02.12
+-- wren ng thornton <wren@community.haskell.org>    ~ 2012.02.25
 ----------------------------------------------------------------
 
 -- By and large Cabal >=1.2 is fine; but >= 1.6 gives tested-with:
@@ -9,7 +9,7 @@ Cabal-Version:  >= 1.6
 Build-Type:     Custom
 
 Name:           stm-chans
-Version:        1.2.0.3
+Version:        1.3.0
 Stability:      provisional
 Homepage:       http://code.haskell.org/~wren/
 Author:         wren ng thornton, Thomas DuBuisson
@@ -36,7 +36,7 @@ Library
     --
     -- N.B., stm >= 2.1.2 is required for fast readTVarIO. And
     -- stm >= ?.?.? is required for fast tryReadTChan, peekTChan,
-    -- tryPeekTChan.
+    -- tryPeekTChan, tryReadTMVar, modifyTVar, modifyTVar', swapTVar.
     Build-Depends: base >= 4.1 && < 5
                  , stm  >= 2.1.1
     
@@ -45,6 +45,7 @@ Library
                    , Control.Concurrent.STM.TBMChan
                    , Control.Concurrent.STM.TMChan
                    , Control.Concurrent.STM.TChan.Compat
+                   , Control.Concurrent.STM.TMVar.Compat
                    , Control.Concurrent.STM.TVar.Compat
 
 ----------------------------------------------------------------
