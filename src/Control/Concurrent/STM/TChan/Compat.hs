@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP #-}
 ----------------------------------------------------------------
---                                                    2011.04.03
+--                                                    2012.02.29
 -- |
 -- Module      :  Control.Concurrent.STM.TChan.Compat
 -- Copyright   :  Copyright (c) 2011--2012 wren ng thornton
@@ -12,7 +12,7 @@
 --
 -- Compatibility layer for older versions of the @stm@ library.
 -- Namely, we define 'tryReadTChan', 'peekTChan', and 'tryPeekTChan'
--- which @stm-X.X.X@ lacks. These implementations are less efficient
+-- which @stm<2.3.0@ lacks. These implementations are less efficient
 -- than the package versions due to the 'TChan' type being abstract.
 -- However, this module uses Cabal-style CPP macros in order to use
 -- the package versions when available.
@@ -39,10 +39,7 @@ module Control.Concurrent.STM.TChan.Compat
 
 import Control.Concurrent.STM.TChan -- N.B., GHC only
 
--- BUG: What version will these really be added?
--- <http://hackage.haskell.org/trac/ghc/ticket/5104>
--- <http://www.haskell.org/pipermail/cvs-libraries/2011-April/012914.html>
-#if ! (MIN_VERSION_stm(9,0,0))
+#if ! (MIN_VERSION_stm(2,3,0))
 import Control.Applicative ((<$>))
 import Control.Monad.STM   (STM)
 
@@ -54,7 +51,7 @@ tryReadTChan :: TChan a -> STM (Maybe a)
 tryReadTChan chan = do
     b <- isEmptyTChan chan
     if b then return Nothing else Just <$> readTChan chan
-{- -- Optimized implementation for when patching @stm@
+{- -- The optimized implementation in stm-2.3.0
 tryReadTChan (TChan read _write) = do
     hd <- readTVar =<< readTVar read
     case hd of
@@ -72,7 +69,7 @@ peekTChan chan = do
     x <- readTChan chan
     unGetTChan chan x
     return x
-{- -- Optimized implementation for when patching @stm@
+{- -- The optimized implementation in stm-2.3.0
 peekTChan (TChan read _write) = do
     hd <- readTVar =<< readTVar read
     case hd of
@@ -87,7 +84,7 @@ tryPeekTChan :: TChan a -> STM (Maybe a)
 tryPeekTChan chan = do
     b <- isEmptyTChan chan
     if b then return Nothing else Just <$> peekTChan chan
-{- -- Optimized implementation for when patching @stm@
+{- -- The optimized implementation in stm-2.3.0
 tryPeekTChan (TChan read _write) = do
     hd <- readTVar =<< readTVar read
     case hd of

@@ -14,3 +14,7 @@
     > what you have of a single counter counting down from the
     > maximum toward zero), but the use of {-# UNPACK #-} should
     > keep it to a single extra word.
+    
+
+-- <http://hackage.haskell.org/trac/ghc/ticket/5104>
+-- <http://www.haskell.org/pipermail/cvs-libraries/2011-April/012914.html>

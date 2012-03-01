@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP #-}
 ----------------------------------------------------------------
---                                                    2011.04.03
+--                                                    2012.02.29
 -- |
 -- Module      :  Control.Concurrent.STM.TVar.Compat
 -- Copyright   :  Copyright (c) 2011--2012 wren ng thornton
@@ -11,8 +11,8 @@
 -- Portability :  non-portable (STM, CPP)
 --
 -- Compatibility layer for older versions of the @stm@ library.
--- Namely, we define 'readTVarIO' which @stm-2.1.1@ lacks; and we
--- define 'modifyTVar', 'modifyTVar'', and 'swapTVar' which @stm-X.X.X@
+-- Namely, we define 'readTVarIO' which @stm<2.1.2@ lacks; and we
+-- define 'modifyTVar', 'modifyTVar'', and 'swapTVar' which @stm<2.3.0@
 -- lacks. This module uses Cabal-style CPP macros in order to use
 -- the package versions when available.
 ----------------------------------------------------------------
@@ -41,10 +41,7 @@ import Control.Concurrent.STM.TVar
 import Control.Concurrent.STM (atomically)
 #endif
 
--- BUG: What version will these really be added?
--- <http://hackage.haskell.org/trac/ghc/ticket/5104>
--- <http://www.haskell.org/pipermail/cvs-libraries/2011-April/012914.html>
-#if ! (MIN_VERSION_stm(9,0,0))
+#if ! (MIN_VERSION_stm(2,3,0))
 import Control.Concurrent.STM (STM)
 #endif
 ----------------------------------------------------------------
@@ -63,8 +60,7 @@ readTVarIO = atomically . readTVar
 #endif
 
 
--- BUG: What version will these really be added?
-#if ! (MIN_VERSION_stm(9,0,0))
+#if ! (MIN_VERSION_stm(2,3,0))
 
 -- Like 'modifyIORef' but for @TVar@.
 -- | Mutate the contents of a @TVar@. /N.B./, this version is
