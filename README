@@ -15,6 +15,10 @@ library:
     $> runhaskell Setup.hs build
     $> runhaskell Setup.hs test
     $> runhaskell Setup.hs haddock --hyperlink-source
-    $> runhaskell Setup.hs install
+    $> runhaskell Setup.hs copy
+    $> runhaskell Setup.hs register
+
+The test step is optional and currently does nothing. The Haddock
+step is also optional.
 
 ----------------------------------------------------------- fin.
