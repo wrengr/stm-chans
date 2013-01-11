@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- wren ng thornton <wren@community.haskell.org>    ~ 2012.02.25
+-- wren ng thornton <wren@community.haskell.org>    ~ 2013.01.10
 ----------------------------------------------------------------
 
 -- By and large Cabal >=1.2 is fine; but >= 1.6 gives tested-with:
@@ -9,12 +9,12 @@ Cabal-Version:  >= 1.6
 Build-Type:     Custom
 
 Name:           stm-chans
-Version:        1.3.1
+Version:        1.3.1.1
 Stability:      provisional
 Homepage:       http://code.haskell.org/~wren/
 Author:         wren ng thornton, Thomas DuBuisson
 Maintainer:     wren@community.haskell.org
-Copyright:      Copyright (c) 2011--2012 wren ng thornton
+Copyright:      Copyright (c) 2011--2013 wren ng thornton
 License:        BSD3
 License-File:   LICENSE
 
@@ -23,7 +23,7 @@ Synopsis:       Additional types of channels for STM.
 Description:    Additional types of channels for STM.
 
 Tested-With:
-    GHC == 6.12.1, GHC == 6.12.3
+    GHC == 6.12.1, GHC == 6.12.3, GHC == 7.6.1
 Extra-source-files:
     AUTHORS, README, VERSION
 Source-Repository head
