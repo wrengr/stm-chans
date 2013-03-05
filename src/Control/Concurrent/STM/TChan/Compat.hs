@@ -26,9 +26,9 @@ module Control.Concurrent.STM.TChan.Compat
     -- * The TChan type
       TChan
     -- ** Creating TChans
-    , newTChan      -- :: STM (TChan a)
-    , newTChanIO    -- :: IO  (TChan a)
-    , dupTChan      -- :: TChan a -> STM (TChan a)
+    , newTChan     -- :: STM (TChan a)
+    , newTChanIO   -- :: IO  (TChan a)
+    , dupTChan     -- :: TChan a -> STM (TChan a)
     -- ** Reading from TChans
     , readTChan     -- :: TChan a -> STM a
     , tryReadTChan  -- :: TChan a -> STM (Maybe a)

@@ -77,6 +77,22 @@ newTMChanIO = do
     closed <- newTVarIO False
     chan   <- newTChanIO
     return (TMChan closed chan)
+    
+
+-- | Like newBroadcastTChan
+newBroadcastTMChan :: STM (TMChan a)
+newBroadcastTMChan = do
+    closed <- newTVar False
+    chan <- newBroadcastTChan
+    return (TMChan closed chan)
+    
+
+-- | Like newBroadcastTChanIO
+newBroadcastTMChanIO :: IO (TMChan a)
+newBroadcastTMChanIO = do
+    closed <- newTVarIO False
+    chan   <- newBroadcastTChanIO
+    return (TMChan closed chan)
 
 
 -- | Duplicate a @TMChan@: the duplicate channel begins empty, but
