@@ -37,14 +37,20 @@ Library
     -- N.B., stm >= 2.1.2 is required for fast readTVarIO. And
     -- stm >= 2.3.0 is required for fast tryReadTChan, peekTChan,
     -- tryPeekTChan, tryReadTMVar, modifyTVar, modifyTVar', swapTVar.
+    --
+    -- N.B., stm >= 2.4 is required for TQueue and TBQueue.
     Build-Depends: base >= 4.1 && < 5
                  , stm  >= 2.1.1
-    
+
     Hs-Source-Dirs:  src
     Exposed-Modules: Control.Concurrent.STM.TBChan
                    , Control.Concurrent.STM.TBMChan
                    , Control.Concurrent.STM.TMChan
+                   , Control.Concurrent.STM.TBMQueue
+                   , Control.Concurrent.STM.TMQueue
                    , Control.Concurrent.STM.TChan.Compat
+                   , Control.Concurrent.STM.TQueue.Compat
+                   , Control.Concurrent.STM.TBQueue.Compat
                    , Control.Concurrent.STM.TMVar.Compat
                    , Control.Concurrent.STM.TVar.Compat
 
