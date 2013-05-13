@@ -66,7 +66,11 @@ import System.IO.Unsafe    (unsafePerformIO)
 
 -- | @TBMQueue@ is an abstract type representing a bounded closeable
 -- FIFO queue.
-data TBMQueue a = TBMQueue !(TVar Bool) !(TVar Int) !(TVar Int) !(TQueue a)
+data TBMQueue a = TBMQueue
+    {-# UNPACK #-} !(TVar Bool)
+    {-# UNPACK #-} !(TVar Int)
+    {-# UNPACK #-} !(TVar Int)
+    {-# UNPACK #-} !(TQueue a)
     deriving (Typeable)
 -- The components are:
 -- * Whether the queue has been closed.

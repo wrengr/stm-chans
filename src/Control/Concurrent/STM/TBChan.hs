@@ -5,7 +5,7 @@
 {-# LANGUAGE Trustworthy #-}
 #endif
 ----------------------------------------------------------------
---                                                    2011.04.06
+--                                                    2013.05.12
 -- |
 -- Module      :  Control.Concurrent.STM.TBChan
 -- Copyright   :  Copyright (c) 2011--2013 wren ng thornton
@@ -59,7 +59,10 @@ import System.IO.Unsafe  (unsafePerformIO)
 
 -- | @TBChan@ is an abstract type representing a bounded FIFO
 -- channel.
-data TBChan a = TBChan !(TVar Int) !(TVar Int) !(TChan a)
+data TBChan a = TBChan
+    {-# UNPACK #-} !(TVar Int)
+    {-# UNPACK #-} !(TVar Int)
+    {-# UNPACK #-} !(TChan a)
     deriving (Typeable)
 -- The components are:
 -- * How many free slots we /know/ we have available.

@@ -5,7 +5,7 @@
 {-# LANGUAGE Trustworthy #-}
 #endif
 ----------------------------------------------------------------
---                                                    2012.02.12
+--                                                    2013.05.12
 -- |
 -- Module      :  Control.Concurrent.STM.TMChan
 -- Copyright   :  Copyright (c) 2011--2013 wren ng thornton
@@ -57,7 +57,9 @@ import System.IO.Unsafe    (unsafePerformIO)
 
 -- | @TMChan@ is an abstract type representing a closeable FIFO
 -- channel.
-data TMChan a = TMChan !(TVar Bool) !(TChan a)
+data TMChan a = TMChan
+    {-# UNPACK #-} !(TVar Bool)
+    {-# UNPACK #-} !(TChan a)
     deriving Typeable
 
 

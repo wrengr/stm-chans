@@ -49,8 +49,9 @@ import Data.Typeable (Typeable)
 
 
 -- | 'TQueue' is an abstract type representing an unbounded FIFO channel.
-data TQueue a = TQueue {-# UNPACK #-} !(TVar [a])
-                       {-# UNPACK #-} !(TVar [a])
+data TQueue a = TQueue
+    {-# UNPACK #-} !(TVar [a])
+    {-# UNPACK #-} !(TVar [a])
     deriving Typeable
 
 instance Eq (TQueue a) where

@@ -58,7 +58,9 @@ import System.IO.Unsafe    (unsafePerformIO)
 
 -- | @TMQueue@ is an abstract type representing a closeable FIFO
 -- queue.
-data TMQueue a = TMQueue !(TVar Bool) !(TQueue a)
+data TMQueue a = TMQueue
+    {-# UNPACK #-} !(TVar Bool)
+    {-# UNPACK #-} !(TQueue a)
     deriving Typeable
 
 

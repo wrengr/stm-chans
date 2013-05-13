@@ -5,7 +5,7 @@
 {-# LANGUAGE Trustworthy #-}
 #endif
 ----------------------------------------------------------------
---                                                    2011.04.06
+--                                                    2013.05.12
 -- |
 -- Module      :  Control.Concurrent.STM.TBMChan
 -- Copyright   :  Copyright (c) 2011--2013 wren ng thornton
@@ -65,7 +65,11 @@ import System.IO.Unsafe    (unsafePerformIO)
 
 -- | @TBMChan@ is an abstract type representing a bounded closeable
 -- FIFO channel.
-data TBMChan a = TBMChan !(TVar Bool) !(TVar Int) !(TVar Int) !(TChan a)
+data TBMChan a = TBMChan
+    {-# UNPACK #-} !(TVar Bool)
+    {-# UNPACK #-} !(TVar Int)
+    {-# UNPACK #-} !(TVar Int)
+    {-# UNPACK #-} !(TChan a)
     deriving (Typeable)
 -- The components are:
 -- * Whether the channel has been closed.

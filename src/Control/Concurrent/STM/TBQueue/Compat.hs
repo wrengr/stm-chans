@@ -47,14 +47,12 @@ import Control.Concurrent.STM.TBQueue
 import Data.Typeable
 import GHC.Conc
 
-#define _UPK_(x) {-# UNPACK #-} !(x)
-
 -- | 'TBQueue' is an abstract type representing a bounded FIFO channel.
-data TBQueue a =
-    TBQueue _UPK_(TVar Int)  -- CR: read capacity
-            _UPK_(TVar [a])  -- R:  elements waiting to be read
-            _UPK_(TVar Int)  -- CW: write capacity
-            _UPK_(TVar [a])  -- W:  elements written (head is most recent)
+data TBQueue a = TBQueue
+    {-# UNPACK #-} !(TVar Int)  -- CR: read capacity
+    {-# UNPACK #-} !(TVar [a])  -- R:  elements waiting to be read
+    {-# UNPACK #-} !(TVar Int)  -- CW: write capacity
+    {-# UNPACK #-} !(TVar [a])  -- W:  elements written (head is most recent)
     deriving Typeable
 
 instance Eq (TBQueue a) where
