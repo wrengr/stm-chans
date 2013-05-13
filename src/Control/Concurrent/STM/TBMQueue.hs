@@ -89,7 +89,7 @@ newTBMQueue n = do
     closed <- newTVar False
     slots  <- newTVar n
     reads  <- newTVar 0
-    queue   <- newTQueue
+    queue  <- newTQueue
     return (TBMQueue closed slots reads queue)
 
 
@@ -101,7 +101,7 @@ newTBMQueueIO n = do
     closed <- newTVarIO False
     slots  <- newTVarIO n
     reads  <- newTVarIO 0
-    queue   <- newTQueueIO
+    queue  <- newTQueueIO
     return (TBMQueue closed slots reads queue)
 
 

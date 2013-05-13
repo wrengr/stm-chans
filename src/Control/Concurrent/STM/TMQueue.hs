@@ -68,7 +68,7 @@ data TMQueue a = TMQueue
 newTMQueue :: STM (TMQueue a)
 newTMQueue = do
     closed <- newTVar False
-    queue   <- newTQueue
+    queue  <- newTQueue
     return (TMQueue closed queue)
 
 
@@ -78,8 +78,9 @@ newTMQueue = do
 newTMQueueIO :: IO (TMQueue a)
 newTMQueueIO = do
     closed <- newTVarIO False
-    queue   <- newTQueueIO
+    queue  <- newTQueueIO
     return (TMQueue closed queue)
+
 
 -- | Read the next value from the @TMQueue@, retrying if the queue
 -- is empty (and not closed). We return @Nothing@ immediately if

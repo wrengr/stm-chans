@@ -25,7 +25,7 @@
 module Control.Concurrent.STM.TQueue.Compat
     (
     -- * The TQueue type
-      TQueue
+      TQueue()
     -- ** Creating TQueues
     , newTQueue     -- :: STM (TQueue a)
     , newTQueueIO   -- :: IO (TQueue a)

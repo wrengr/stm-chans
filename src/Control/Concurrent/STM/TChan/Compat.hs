@@ -24,7 +24,7 @@
 module Control.Concurrent.STM.TChan.Compat
     (
     -- * The TChan type
-      TChan
+      TChan()
     -- ** Creating TChans
     , newTChan     -- :: STM (TChan a)
     , newTChanIO   -- :: IO  (TChan a)
