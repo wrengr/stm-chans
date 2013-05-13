@@ -27,6 +27,8 @@ module Control.Concurrent.STM.TMChan
     , newTMChan
     , newTMChanIO
     , dupTMChan
+    , newBroadcastTMChan
+    , newBroadcastTMChanIO
     -- ** Reading from TMChans
     , readTMChan
     , tryReadTMChan
@@ -81,15 +83,19 @@ newTMChanIO = do
     return (TMChan closed chan)
     
 
--- | Like newBroadcastTChan
+-- | Like 'newBroadcastTChan'.
+--
+-- /Since: 2.1.0/
 newBroadcastTMChan :: STM (TMChan a)
 newBroadcastTMChan = do
     closed <- newTVar False
-    chan <- newBroadcastTChan
+    chan   <- newBroadcastTChan
     return (TMChan closed chan)
     
 
--- | Like newBroadcastTChanIO
+-- | @IO@ version of 'newBroadcastTMChan'.
+--
+-- /Since: 2.1.0/
 newBroadcastTMChanIO :: IO (TMChan a)
 newBroadcastTMChanIO = do
     closed <- newTVarIO False
