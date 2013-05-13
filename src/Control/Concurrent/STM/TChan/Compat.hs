@@ -1,10 +1,14 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP #-}
+
+#if __GLASGOW_HASKELL__ >= 701
+{-# LANGUAGE Trustworthy #-}
+#endif
 ----------------------------------------------------------------
 --                                                    2012.02.29
 -- |
 -- Module      :  Control.Concurrent.STM.TChan.Compat
--- Copyright   :  Copyright (c) 2011--2012 wren ng thornton
+-- Copyright   :  Copyright (c) 2011--2013 wren ng thornton
 -- License     :  BSD
 -- Maintainer  :  wren@community.haskell.org
 -- Stability   :  provisional
@@ -12,7 +16,7 @@
 --
 -- Compatibility layer for older versions of the @stm@ library.
 -- Namely, we define 'tryReadTChan', 'peekTChan', and 'tryPeekTChan'
--- which @stm<2.3.0@ lacks. These implementations are less efficient
+-- which @stm < 2.3.0@ lacks. These implementations are less efficient
 -- than the package versions due to the 'TChan' type being abstract.
 -- However, this module uses Cabal-style CPP macros in order to use
 -- the package versions when available.
@@ -22,19 +26,19 @@ module Control.Concurrent.STM.TChan.Compat
     -- * The TChan type
       TChan
     -- ** Creating TChans
-    , newTChan     -- :: STM (TChan a)
-    , newTChanIO   -- :: IO  (TChan a)
-    , dupTChan     -- :: TChan a -> STM (TChan a)
+    , newTChan      -- :: STM (TChan a)
+    , newTChanIO    -- :: IO  (TChan a)
+    , dupTChan      -- :: TChan a -> STM (TChan a)
     -- ** Reading from TChans
-    , readTChan    -- :: TChan a -> STM a
-    , tryReadTChan -- :: TChan a -> STM (Maybe a)
-    , peekTChan    -- :: TChan a -> STM a
-    , tryPeekTChan -- :: TChan a -> STM (Maybe a)
+    , readTChan     -- :: TChan a -> STM a
+    , tryReadTChan  -- :: TChan a -> STM (Maybe a)
+    , peekTChan     -- :: TChan a -> STM a
+    , tryPeekTChan  -- :: TChan a -> STM (Maybe a)
     -- ** Writing to TChans
-    , unGetTChan   -- :: TChan a -> a -> STM ()
-    , writeTChan   -- :: TChan a -> a -> STM ()
+    , unGetTChan    -- :: TChan a -> a -> STM ()
+    , writeTChan    -- :: TChan a -> a -> STM ()
     -- ** Predicates
-    , isEmptyTChan -- :: TChan a -> STM Bool
+    , isEmptyTChan  -- :: TChan a -> STM Bool
     ) where
 
 import Control.Concurrent.STM.TChan -- N.B., GHC only

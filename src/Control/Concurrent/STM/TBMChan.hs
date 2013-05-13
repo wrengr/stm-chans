@@ -1,10 +1,14 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
+
+#if __GLASGOW_HASKELL__ >= 701
+{-# LANGUAGE Trustworthy #-}
+#endif
 ----------------------------------------------------------------
 --                                                    2011.04.06
 -- |
 -- Module      :  Control.Concurrent.STM.TBMChan
--- Copyright   :  Copyright (c) 2011--2012 wren ng thornton
+-- Copyright   :  Copyright (c) 2011--2013 wren ng thornton
 -- License     :  BSD
 -- Maintainer  :  wren@community.haskell.org
 -- Stability   :  provisional

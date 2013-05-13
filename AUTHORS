@@ -1,9 +1,13 @@
 === Haskell stm-chans package AUTHORS/THANKS file ===
 
 The stm-chans package was written (predominantly) by wren ng thornton
-and is released under the terms in the LICENSE file. Some important
-improvements to TBChan and TBMChan were contributed by Thomas
-DuBuisson, incorporating parts of his bounded-tchan package. These
-improvements reduce contention between readers and writers, improving
-throughput by 2--3 times when producers and consumers are running
-in separate OS threads.
+and is released under the terms in the LICENSE file. I would also
+like to give thanks to the following contributers:
+
+Thomas DuBuisson --- For important improvements to TBChan and
+    TBMChan, incorporating parts of his bounded-tchan package. These
+    improvements reduce contention between readers and writers,
+    improving throughput by 2--3 times when producers and consumers
+    are running in separate OS threads.
+
+kudah --- For adding TQueue support.

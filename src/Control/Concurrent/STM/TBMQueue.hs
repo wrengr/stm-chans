@@ -1,10 +1,14 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
+
+#if __GLASGOW_HASKELL__ >= 701
+{-# LANGUAGE Trustworthy #-}
+#endif
 ----------------------------------------------------------------
---                                                    2011.04.06
+--                                                    2013.05.12
 -- |
 -- Module      :  Control.Concurrent.STM.TBMQueue
--- Copyright   :  Copyright (c) 2011--2012 wren ng thornton
+-- Copyright   :  Copyright (c) 2011--2013 wren ng thornton
 -- License     :  BSD
 -- Maintainer  :  wren@community.haskell.org
 -- Stability   :  provisional
@@ -16,6 +20,8 @@
 -- This variant incorporates ideas from Thomas M. DuBuisson's
 -- @bounded-tqueue@ package in order to reduce contention between
 -- readers and writers.
+--
+-- /Since: 2.0.0/
 ----------------------------------------------------------------
 module Control.Concurrent.STM.TBMQueue
     (

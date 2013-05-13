@@ -1,10 +1,14 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
+
+#if __GLASGOW_HASKELL__ >= 701
+{-# LANGUAGE Trustworthy #-}
+#endif
 ----------------------------------------------------------------
---                                                    2012.02.12
+--                                                    2013.05.12
 -- |
 -- Module      :  Control.Concurrent.STM.TMQueue
--- Copyright   :  Copyright (c) 2011--2012 wren ng thornton
+-- Copyright   :  Copyright (c) 2011--2013 wren ng thornton
 -- License     :  BSD
 -- Maintainer  :  wren@community.haskell.org
 -- Stability   :  provisional
@@ -14,6 +18,8 @@
 -- closeable. This is similar to a @TQueue (Maybe a)@ with a
 -- monotonicity guarantee that once there's a @Nothing@ there will
 -- always be @Nothing@.
+--
+-- /Since: 2.0.0/
 ----------------------------------------------------------------
 module Control.Concurrent.STM.TMQueue
     (

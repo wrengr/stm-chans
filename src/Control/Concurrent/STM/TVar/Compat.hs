@@ -1,18 +1,22 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP #-}
+
+#if __GLASGOW_HASKELL__ >= 701
+{-# LANGUAGE Trustworthy #-}
+#endif
 ----------------------------------------------------------------
 --                                                    2012.02.29
 -- |
 -- Module      :  Control.Concurrent.STM.TVar.Compat
--- Copyright   :  Copyright (c) 2011--2012 wren ng thornton
+-- Copyright   :  Copyright (c) 2011--2013 wren ng thornton
 -- License     :  BSD
 -- Maintainer  :  wren@community.haskell.org
 -- Stability   :  provisional
 -- Portability :  non-portable (STM, CPP)
 --
 -- Compatibility layer for older versions of the @stm@ library.
--- Namely, we define 'readTVarIO' which @stm<2.1.2@ lacks; and we
--- define 'modifyTVar', 'modifyTVar'', and 'swapTVar' which @stm<2.3.0@
+-- Namely, we define 'readTVarIO' which @stm < 2.1.2@ lacks; and we
+-- define 'modifyTVar', 'modifyTVar'', and 'swapTVar' which @stm < 2.3.0@
 -- lacks. This module uses Cabal-style CPP macros in order to use
 -- the package versions when available.
 ----------------------------------------------------------------
