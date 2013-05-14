@@ -17,9 +17,6 @@
 -- A version of "Control.Concurrent.STM.TQueue" where the queue is
 -- bounded in length and closeable. This combines the abilities of
 -- "Control.Concurrent.STM.TBQueue" and "Control.Concurrent.STM.TMQueue".
--- This variant incorporates ideas from Thomas M. DuBuisson's
--- @bounded-tqueue@ package in order to reduce contention between
--- readers and writers.
 --
 -- /Since: 2.0.0/
 ----------------------------------------------------------------
