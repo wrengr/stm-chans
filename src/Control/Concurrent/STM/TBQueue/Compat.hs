@@ -5,7 +5,7 @@
 {-# LANGUAGE Trustworthy #-}
 #endif
 ----------------------------------------------------------------
---                                                    2013.05.12
+--                                                    2013.05.29
 -- |
 -- Module      :  Control.Concurrent.STM.TBQueue.Compat
 -- Copyright   :  Copyright (c) 2011--2013 wren ng thornton
@@ -19,10 +19,11 @@
 -- @stm < 2.4.0@ lacks. This module uses Cabal-style CPP macros in
 -- order to use the package versions when available.
 --
--- /Since: 2.0.0/
+-- /Since: 2.0.0; Deprecated: 2.1.0 (will be removed in 3.0)/
 ----------------------------------------------------------------
 
 module Control.Concurrent.STM.TBQueue.Compat
+    {-# DEPRECATED "stm-chans >= 2.1 requires stm >= 2.4; so this module no longer does anything useful." #-}
     (
     -- * The TBQueue type
       TBQueue()

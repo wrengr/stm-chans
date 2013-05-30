@@ -5,7 +5,7 @@
 {-# LANGUAGE Trustworthy #-}
 #endif
 ----------------------------------------------------------------
---                                                    2013.05.12
+--                                                    2013.05.29
 -- |
 -- Module      :  Control.Concurrent.STM.TBMQueue
 -- Copyright   :  Copyright (c) 2011--2013 wren ng thornton
@@ -51,8 +51,8 @@ import Prelude             hiding (reads)
 import Data.Typeable       (Typeable)
 import Control.Applicative ((<$>))
 import Control.Monad.STM   (STM, retry)
-import Control.Concurrent.STM.TVar.Compat
-import Control.Concurrent.STM.TQueue.Compat -- N.B., GHC only
+import Control.Concurrent.STM.TVar
+import Control.Concurrent.STM.TQueue -- N.B., GHC only
 
 -- N.B., we need a Custom cabal build-type for this to work.
 #ifdef __HADDOCK__

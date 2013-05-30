@@ -5,7 +5,7 @@
 {-# LANGUAGE Trustworthy #-}
 #endif
 ----------------------------------------------------------------
---                                                    2012.02.29
+--                                                    2012.05.29
 -- |
 -- Module      :  Control.Concurrent.STM.TVar.Compat
 -- Copyright   :  Copyright (c) 2011--2013 wren ng thornton
@@ -19,8 +19,11 @@
 -- define 'modifyTVar', 'modifyTVar'', and 'swapTVar' which @stm < 2.3.0@
 -- lacks. This module uses Cabal-style CPP macros in order to use
 -- the package versions when available.
+--
+-- /Deprecated: 2.1.0 (will be removed in 3.0)/
 ----------------------------------------------------------------
 module Control.Concurrent.STM.TVar.Compat
+    {-# DEPRECATED "stm-chans >= 2.1 requires stm >= 2.4; so this module no longer does anything useful." #-}
     (
     -- * The TVar type
       TVar()

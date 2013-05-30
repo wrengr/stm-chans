@@ -5,7 +5,7 @@
 {-# LANGUAGE Trustworthy #-}
 #endif
 ----------------------------------------------------------------
---                                                    2013.05.12
+--                                                    2013.05.29
 -- |
 -- Module      :  Control.Concurrent.STM.TChan.Compat
 -- Copyright   :  Copyright (c) 2011--2013 wren ng thornton
@@ -16,13 +16,15 @@
 --
 -- Compatibility layer for older versions of the @stm@ library.
 -- Namely, we define 'tryReadTChan', 'peekTChan', and 'tryPeekTChan'
--- which @stm < 2.3.0@ lacks; and we define 'newBroadcastTChan' and
--- 'newBroadcastTChanIO' which @stm < 2.4@ lacks. These implementations
--- are less efficient than the package versions due to the 'TChan'
--- type being abstract. However, this module uses Cabal-style CPP
--- macros in order to use the package versions when available.
+-- which @stm < 2.3.0@ lacks. These implementations are less efficient
+-- than the package versions due to the 'TChan' type being abstract.
+-- However, this module uses Cabal-style CPP macros in order to use
+-- the package versions when available.
+--
+-- /Deprecated: 2.1.0 (will be removed in 3.0)/
 ----------------------------------------------------------------
 module Control.Concurrent.STM.TChan.Compat
+    {-# DEPRECATED "stm-chans >= 2.1 requires stm >= 2.4; so this module no longer does anything useful." #-}
     (
     -- * The TChan type
       TChan()
