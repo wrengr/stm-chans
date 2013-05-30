@@ -1,10 +1,10 @@
 3.0.0 (2013-05-29):
-    - Removed the deprecated compatability modules.
+    - Removed the deprecated compatibility modules.
 
 2.1.0 (2013-05-29):
     - Added UNPACK pragmas everywhere to reduce indirections.
     - Added versions of newBroadcastT*Chan for TMChan
-    - Deprecated all the compatability stuff, since newBroadcastTChan requires stm >= 2.4 anyways.
+    - Deprecated all the compatibility stuff, since newBroadcastTChan requires stm >= 2.4 anyways.
 2.0.0 (2013-05-12):
     - Add TQueue support
 
