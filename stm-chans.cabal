@@ -9,7 +9,7 @@ Cabal-Version:  >= 1.6
 Build-Type:     Custom
 
 Name:           stm-chans
-Version:        2.1.0
+Version:        3.0.0
 Stability:      provisional
 Homepage:       http://code.haskell.org/~wren/
 Author:         wren ng thornton, Thomas DuBuisson
@@ -48,11 +48,6 @@ Library
                    , Control.Concurrent.STM.TMChan
                    , Control.Concurrent.STM.TBMQueue
                    , Control.Concurrent.STM.TMQueue
-                   , Control.Concurrent.STM.TChan.Compat
-                   , Control.Concurrent.STM.TQueue.Compat
-                   , Control.Concurrent.STM.TBQueue.Compat
-                   , Control.Concurrent.STM.TMVar.Compat
-                   , Control.Concurrent.STM.TVar.Compat
 
 ----------------------------------------------------------------
 ----------------------------------------------------------- fin.
