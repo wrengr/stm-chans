@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- wren ng thornton <wren@community.haskell.org>    ~ 2011.04.17
+-- wren gayle romano <wren@community.haskell.org>   ~ 2011.04.17
 ----------------------------------------------------------------
 
 Name:           stm-chans-bench
@@ -8,10 +8,10 @@ Version:        1.2.0
 Cabal-Version:  >= 1.6
 Build-Type:     Simple
 Stability:      experimental
-Copyright:      Copyright (c) 2011 wren ng thornton
+Copyright:      Copyright (c) 2011 wren gayle romano
 License:        BSD3
 License-File:   ../../LICENSE
-Author:         wren ng thornton
+Author:         wren gayle romano
 Maintainer:     wren@community.haskell.org
 Homepage:       http://code.haskell.org/~wren/
 Category:       Concurrency

@@ -7,9 +7,9 @@ Date: Sat, 16 Apr 2011 10:57:11 -0700
 Message-ID: <BANLkTimFc2LLtZ9fie1WU=tn9ns3rix7Qw@mail.gmail.com>
 Subject: Re: ANN: stm-chans: Additional types of channels for STM.
 From: Thomas DuBuisson <thomas.dubuisson@gmail.com>
-To: wren ng thornton <wren@freegeek.org>
+To: wren gayle romano <wren@freegeek.org>
 
-On Fri, Apr 15, 2011 at 5:57 PM, wren ng thornton <wren@freegeek.org> wrote:
+On Fri, Apr 15, 2011 at 5:57 PM, wren gayle romano <wren@freegeek.org> wrote:
 > On 4/3/11 11:58 PM, Thomas DuBuisson wrote:
 >> Wren,
 >> Glad to see someone is doing a more complete packaging of STM
