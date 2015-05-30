@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- wren gayle romano <wren@community.haskell.org>   ~ 2015.03.29
+-- wren gayle romano <wren@community.haskell.org>   ~ 2015.05.30
 ----------------------------------------------------------------
 
 -- By and large Cabal >=1.2 is fine; but >= 1.6 gives tested-with:
@@ -9,7 +9,7 @@ Cabal-Version:  >= 1.6
 Build-Type:     Custom
 
 Name:           stm-chans
-Version:        3.0.0.3
+Version:        3.0.0.4
 Stability:      provisional
 Homepage:       http://code.haskell.org/~wren/
 Author:         wren gayle romano, Thomas DuBuisson
@@ -26,7 +26,7 @@ Description:    Additional types of channels for STM.
 Tested-With:
     GHC ==7.8.3, GHC ==7.10.1
 Extra-source-files:
-    AUTHORS, README, VERSION
+    AUTHORS, README, CHANGELOG
 Source-Repository head
     Type:     darcs
     Location: http://community.haskell.org/~wren/stm-chans

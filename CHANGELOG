@@ -1,3 +1,5 @@
+3.0.0.4 (2015-05-30):
+    - Moved VERSION to CHANGELOG
 3.0.0.3 (2015-03-29):
     - Cleaning up headers to compile cleanly with GHC 7.10
 3.0.0 (2013-05-29):
