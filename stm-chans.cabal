@@ -8,7 +8,7 @@ Cabal-Version:  >= 1.10
 Build-Type:     Custom
 
 Name:           stm-chans
-Version:        3.0.0.4
+Version:        3.0.0.5
 Stability:      provisional
 Homepage:       http://wrengr.org
 Author:         wren gayle romano, Thomas DuBuisson
@@ -25,7 +25,7 @@ Extra-source-files:
     AUTHORS, README.md, CHANGELOG
 
 -- This used to be tested on 7.8.3 and 7.10.1, but we don't verify that by CI.
--- <https://github.com/wrengr/bytestring-trie/actions?query=workflow%3Aci>
+-- <https://github.com/wrengr/stm-chans/actions?query=workflow%3Aci>
 Tested-With:
     GHC ==8.0.2,
     GHC ==8.2.2,
@@ -41,6 +41,12 @@ Source-Repository head
     Location: https://github.com/wrengr/stm-chans.git
 
 ----------------------------------------------------------------
+-- HACK: since Cabal-1.24 we need this stansa to explicitly loosen
+-- the upper bound on the Cabal library used for Setup.hs.
+-- TODO: Just about makes me want to abandon our __HADDOCK__ hack.
+Custom-Setup
+    Setup-Depends: base  >= 4.1  && < 5
+                 , Cabal >= 1.14 && < 3.5
 Library
     Default-Language: Haskell2010
     -- N.B., the following versions are required for:
