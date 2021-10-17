@@ -32,19 +32,6 @@ is GHC-only. With the cabal-install program you can just do:
 
     $> cabal install stm-chans
 
-Or if you don't have cabal-install, then you can use the Cabal
-library:
-
-    $> runhaskell Setup.hs configure
-    $> runhaskell Setup.hs build
-    $> runhaskell Setup.hs test
-    $> runhaskell Setup.hs haddock --hyperlink-source
-    $> runhaskell Setup.hs copy
-    $> runhaskell Setup.hs register
-
-The test step is optional and currently does nothing. The Haddock
-step is also optional.
-
 
 ## Links
 
