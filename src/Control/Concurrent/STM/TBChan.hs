@@ -1,28 +1,16 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
 
--- HACK: in GHC 7.10, Haddock complains about Control.Monad.STM and
--- System.IO.Unsafe being imported but unused. However, if we use
--- CPP to avoid including them under Haddock, then it will fail to
--- compile!
-#ifdef __HADDOCK__
-{-# OPTIONS_GHC -fno-warn-unused-imports #-}
-#endif
-
 #if __GLASGOW_HASKELL__ >= 701
-#  ifdef __HADDOCK__
-{-# LANGUAGE Trustworthy #-}
-#  else
 {-# LANGUAGE Safe #-}
-#  endif
 #endif
 ----------------------------------------------------------------
---                                                    2015.03.29
+--                                                    2021.10.17
 -- |
 -- Module      :  Control.Concurrent.STM.TBChan
--- Copyright   :  Copyright (c) 2011--2015 wren gayle romano
+-- Copyright   :  Copyright (c) 2011--2021 wren gayle romano
 -- License     :  BSD
--- Maintainer  :  wren@community.haskell.org
+-- Maintainer  :  wren@cpan.org
 -- Stability   :  provisional
 -- Portability :  non-portable (GHC STM, DeriveDataTypeable)
 --
@@ -61,12 +49,6 @@ import Data.Typeable     (Typeable)
 import Control.Monad.STM (STM, retry)
 import Control.Concurrent.STM.TVar
 import Control.Concurrent.STM.TChan -- N.B., GHC only
-
--- N.B., we need a Custom cabal build-type for this to work.
-#ifdef __HADDOCK__
-import Control.Monad.STM (atomically)
-import System.IO.Unsafe  (unsafePerformIO)
-#endif
 ----------------------------------------------------------------
 
 -- | @TBChan@ is an abstract type representing a bounded FIFO
@@ -96,8 +78,9 @@ newTBChan n = do
 
 
 -- | @IO@ version of 'newTBChan'. This is useful for creating
--- top-level @TBChan@s using 'unsafePerformIO', because using
--- 'atomically' inside 'unsafePerformIO' isn't possible.
+-- top-level @TBChan@s using 'System.IO.Unsafe.unsafePerformIO',
+-- because using 'Control.Monad.STM.atomically' inside
+-- 'System.IO.Unsafe.unsafePerformIO' isn't possible.
 newTBChanIO :: Int -> IO (TBChan a)
 newTBChanIO n = do
     slots <- newTVarIO n
@@ -205,15 +188,15 @@ unGetTBChan (TBChan slots _reads chan) x = do
 
 
 -- | Returns @True@ if the supplied @TBChan@ is empty (i.e., has
--- no elements). /N.B./, a @TBChan@ can be both ``empty'' and
--- ``full'' at the same time, if the initial limit was non-positive.
+-- no elements). /N.B./, a @TBChan@ can be both \"empty\" and
+-- \"full\" at the same time, if the initial limit was non-positive.
 isEmptyTBChan :: TBChan a -> STM Bool
 isEmptyTBChan (TBChan _slots _reads chan) =
     isEmptyTChan chan
 
 
 -- | Returns @True@ if the supplied @TBChan@ is full (i.e., is over
--- its limit). /N.B./, a @TBChan@ can be both ``empty'' and ``full''
+-- its limit). /N.B./, a @TBChan@ can be both \"empty\" and \"full\"
 -- at the same time, if the initial limit was non-positive. /N.B./,
 -- a @TBChan@ may still be full after reading, if 'unGetTBChan' was
 -- used to go over the initial limit.

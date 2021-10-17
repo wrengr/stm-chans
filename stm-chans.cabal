@@ -4,8 +4,7 @@
 
 -- Cabal >=1.10 is required by Hackage.
 Cabal-Version:  >= 1.10
--- We need a custom build in order to define __HADDOCK__
-Build-Type:     Custom
+Build-Type:     Simple
 
 Name:           stm-chans
 Version:        3.0.0.6
@@ -42,12 +41,6 @@ Source-Repository head
     Location: https://github.com/wrengr/stm-chans.git
 
 ----------------------------------------------------------------
--- HACK: since Cabal-1.24 we need this stansa to explicitly loosen
--- the upper bound on the Cabal library used for Setup.hs.
--- TODO: Just about makes me want to abandon our __HADDOCK__ hack.
-Custom-Setup
-    Setup-Depends: base  >= 4.1  && < 5
-                 , Cabal >= 1.14 && < 3.7
 Library
     Default-Language: Haskell2010
     -- N.B., the following versions are required for:

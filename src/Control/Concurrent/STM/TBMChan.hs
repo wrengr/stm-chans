@@ -1,28 +1,16 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
 
--- HACK: in GHC 7.10, Haddock complains about Control.Monad.STM and
--- System.IO.Unsafe being imported but unused. However, if we use
--- CPP to avoid including them under Haddock, then it will fail to
--- compile!
-#ifdef __HADDOCK__
-{-# OPTIONS_GHC -fno-warn-unused-imports #-}
-#endif
-
 #if __GLASGOW_HASKELL__ >= 701
-#  ifdef __HADDOCK__
-{-# LANGUAGE Trustworthy #-}
-#  else
 {-# LANGUAGE Safe #-}
-#  endif
 #endif
 ----------------------------------------------------------------
---                                                    2015.03.29
+--                                                    2021.10.17
 -- |
 -- Module      :  Control.Concurrent.STM.TBMChan
--- Copyright   :  Copyright (c) 2011--2015 wren gayle romano
+-- Copyright   :  Copyright (c) 2011--2021 wren gayle romano
 -- License     :  BSD
--- Maintainer  :  wren@community.haskell.org
+-- Maintainer  :  wren@cpan.org
 -- Stability   :  provisional
 -- Portability :  non-portable (GHC STM, DeriveDataTypeable)
 --
@@ -69,12 +57,6 @@ import Control.Applicative ((<$>))
 import Control.Monad.STM   (STM, retry)
 import Control.Concurrent.STM.TVar
 import Control.Concurrent.STM.TChan -- N.B., GHC only
-
--- N.B., we need a Custom cabal build-type for this to work.
-#ifdef __HADDOCK__
-import Control.Monad.STM   (atomically)
-import System.IO.Unsafe    (unsafePerformIO)
-#endif
 ----------------------------------------------------------------
 
 -- | @TBMChan@ is an abstract type representing a bounded closeable
@@ -107,8 +89,9 @@ newTBMChan n = do
 
 
 -- | @IO@ version of 'newTBMChan'. This is useful for creating
--- top-level @TBMChan@s using 'unsafePerformIO', because using
--- 'atomically' inside 'unsafePerformIO' isn't possible.
+-- top-level @TBMChan@s using 'System.IO.Unsafe.unsafePerformIO',
+-- because using 'Control.Monad.STM.atomically' inside
+-- 'System.IO.Unsafe.unsafePerformIO' isn't possible.
 newTBMChanIO :: Int -> IO (TBMChan a)
 newTBMChanIO n = do
     closed <- newTVarIO False
@@ -136,7 +119,7 @@ readTBMChan (TBMChan closed _slots reads chan) = do
             x <- readTChan chan
             modifyTVar' reads (1 +)
             return (Just x)
-{- 
+{-
 -- The above is slightly optimized over the clearer:
 readTBMChan (TBMChan closed _slots reads chan) =
     b  <- readTVar closed
@@ -173,7 +156,7 @@ tryReadTBMChan (TBMChan closed _slots reads chan) = do
                 Just _x -> do
                     modifyTVar' reads (1 +)
                     return (Just mx)
-{- 
+{-
 -- The above is slightly optimized over the clearer:
 tryReadTBMChan (TBMChan closed _slots reads chan) =
     b  <- readTVar closed
@@ -208,7 +191,7 @@ peekTBMChan (TBMChan closed _slots _reads chan) = do
 peekTBMChan (TBMChan closed _slots _reads chan) = do
     b  <- isEmptyTChan chan
     b' <- readTVar closed
-    if b && b' 
+    if b && b'
         then return Nothing
         else Just <$> peekTChan chan
 -- TODO: compare Core and benchmarks; is the loss of clarity worth it?
@@ -230,7 +213,7 @@ tryPeekTBMChan (TBMChan closed _slots _reads chan) = do
 tryPeekTBMChan (TBMChan closed _slots _reads chan) = do
     b  <- isEmptyTChan chan
     b' <- readTVar closed
-    if b && b' 
+    if b && b'
         then return Nothing
         else Just <$> tryPeekTChan chan
 -- TODO: compare Core and benchmarks; is the loss of clarity worth it?
@@ -310,16 +293,16 @@ isClosedTBMChanIO (TBMChan closed _slots _reads _chan) =
 
 
 -- | Returns @True@ if the supplied @TBMChan@ is empty (i.e., has
--- no elements). /N.B./, a @TBMChan@ can be both ``empty'' and
--- ``full'' at the same time, if the initial limit was non-positive.
+-- no elements). /N.B./, a @TBMChan@ can be both \"empty\" and
+-- \"full\" at the same time, if the initial limit was non-positive.
 isEmptyTBMChan :: TBMChan a -> STM Bool
 isEmptyTBMChan (TBMChan _closed _slots _reads chan) =
     isEmptyTChan chan
 
 
 -- | Returns @True@ if the supplied @TBMChan@ is full (i.e., is
--- over its limit). /N.B./, a @TBMChan@ can be both ``empty'' and
--- ``full'' at the same time, if the initial limit was non-positive.
+-- over its limit). /N.B./, a @TBMChan@ can be both \"empty\" and
+-- \"full\" at the same time, if the initial limit was non-positive.
 -- /N.B./, a @TBMChan@ may still be full after reading, if
 -- 'unGetTBMChan' was used to go over the initial limit.
 --

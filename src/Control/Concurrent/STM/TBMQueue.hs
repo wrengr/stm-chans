@@ -1,28 +1,16 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
 
--- HACK: in GHC 7.10, Haddock complains about Control.Monad.STM and
--- System.IO.Unsafe being imported but unused. However, if we use
--- CPP to avoid including them under Haddock, then it will fail to
--- compile!
-#ifdef __HADDOCK__
-{-# OPTIONS_GHC -fno-warn-unused-imports #-}
-#endif
-
 #if __GLASGOW_HASKELL__ >= 701
-#  ifdef __HADDOCK__
-{-# LANGUAGE Trustworthy #-}
-#  else
 {-# LANGUAGE Safe #-}
-#  endif
 #endif
 ----------------------------------------------------------------
---                                                    2015.03.29
+--                                                    2021.10.17
 -- |
 -- Module      :  Control.Concurrent.STM.TBMQueue
--- Copyright   :  Copyright (c) 2011--2015 wren gayle romano
+-- Copyright   :  Copyright (c) 2011--2021 wren gayle romano
 -- License     :  BSD
--- Maintainer  :  wren@community.haskell.org
+-- Maintainer  :  wren@cpan.org
 -- Stability   :  provisional
 -- Portability :  non-portable (GHC STM, DeriveDataTypeable)
 --
@@ -67,12 +55,6 @@ import Control.Applicative ((<$>))
 import Control.Monad.STM   (STM, retry)
 import Control.Concurrent.STM.TVar
 import Control.Concurrent.STM.TQueue -- N.B., GHC only
-
--- N.B., we need a Custom cabal build-type for this to work.
-#ifdef __HADDOCK__
-import Control.Monad.STM   (atomically)
-import System.IO.Unsafe    (unsafePerformIO)
-#endif
 ----------------------------------------------------------------
 
 -- | @TBMQueue@ is an abstract type representing a bounded closeable
@@ -105,8 +87,9 @@ newTBMQueue n = do
 
 
 -- | @IO@ version of 'newTBMQueue'. This is useful for creating
--- top-level @TBMQueue@s using 'unsafePerformIO', because using
--- 'atomically' inside 'unsafePerformIO' isn't possible.
+-- top-level @TBMQueue@s using 'System.IO.Unsafe.unsafePerformIO',
+-- because using 'Control.Monad.STM.atomically' inside
+-- 'System.IO.Unsafe.unsafePerformIO' isn't possible.
 newTBMQueueIO :: Int -> IO (TBMQueue a)
 newTBMQueueIO n = do
     closed <- newTVarIO False
@@ -308,16 +291,16 @@ isClosedTBMQueueIO (TBMQueue closed _slots _reads _queue) =
 
 
 -- | Returns @True@ if the supplied @TBMQueue@ is empty (i.e., has
--- no elements). /N.B./, a @TBMQueue@ can be both ``empty'' and
--- ``full'' at the same time, if the initial limit was non-positive.
+-- no elements). /N.B./, a @TBMQueue@ can be both \"empty\" and
+-- \"full\" at the same time, if the initial limit was non-positive.
 isEmptyTBMQueue :: TBMQueue a -> STM Bool
 isEmptyTBMQueue (TBMQueue _closed _slots _reads queue) =
     isEmptyTQueue queue
 
 
 -- | Returns @True@ if the supplied @TBMQueue@ is full (i.e., is
--- over its limit). /N.B./, a @TBMQueue@ can be both ``empty'' and
--- ``full'' at the same time, if the initial limit was non-positive.
+-- over its limit). /N.B./, a @TBMQueue@ can be both \"empty\" and
+-- \"full\" at the same time, if the initial limit was non-positive.
 -- /N.B./, a @TBMQueue@ may still be full after reading, if
 -- 'unGetTBMQueue' was used to go over the initial limit.
 --

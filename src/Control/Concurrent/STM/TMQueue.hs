@@ -1,28 +1,16 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
 
--- HACK: in GHC 7.10, Haddock complains about Control.Monad.STM and
--- System.IO.Unsafe being imported but unused. However, if we use
--- CPP to avoid including them under Haddock, then it will fail to
--- compile!
-#ifdef __HADDOCK__
-{-# OPTIONS_GHC -fno-warn-unused-imports #-}
-#endif
-
 #if __GLASGOW_HASKELL__ >= 701
-#  ifdef __HADDOCK__
-{-# LANGUAGE Trustworthy #-}
-#  else
 {-# LANGUAGE Safe #-}
-#  endif
 #endif
 ----------------------------------------------------------------
---                                                    2015.03.29
+--                                                    2021.10.17
 -- |
 -- Module      :  Control.Concurrent.STM.TMQueue
--- Copyright   :  Copyright (c) 2011--2015 wren gayle romano
+-- Copyright   :  Copyright (c) 2011--2021 wren gayle romano
 -- License     :  BSD
--- Maintainer  :  wren@community.haskell.org
+-- Maintainer  :  wren@cpan.org
 -- Stability   :  provisional
 -- Portability :  non-portable (GHC STM, DeriveDataTypeable)
 --
@@ -62,12 +50,6 @@ import Control.Applicative ((<$>))
 import Control.Monad.STM   (STM)
 import Control.Concurrent.STM.TVar
 import Control.Concurrent.STM.TQueue -- N.B., GHC only
-
--- N.B., we need a Custom cabal build-type for this to work.
-#ifdef __HADDOCK__
-import Control.Monad.STM   (atomically)
-import System.IO.Unsafe    (unsafePerformIO)
-#endif
 ----------------------------------------------------------------
 
 -- | @TMQueue@ is an abstract type representing a closeable FIFO
@@ -87,8 +69,9 @@ newTMQueue = do
 
 
 -- | @IO@ version of 'newTMQueue'. This is useful for creating
--- top-level @TMQueue@s using 'unsafePerformIO', because using
--- 'atomically' inside 'unsafePerformIO' isn't possible.
+-- top-level @TMQueue@s using 'System.IO.Unsafe.unsafePerformIO',
+-- because using 'Control.Monad.STM.atomically' inside
+-- 'System.IO.Unsafe.unsafePerformIO' isn't possible.
 newTMQueueIO :: IO (TMQueue a)
 newTMQueueIO = do
     closed <- newTVarIO False
