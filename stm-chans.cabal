@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- wren gayle romano <wren@community.haskell.org>   ~ 2021.10.16
+-- wren gayle romano <wren@cpan.org>                ~ 2021.10.17
 ----------------------------------------------------------------
 
 -- Cabal >=1.10 is required by Hackage.
@@ -8,12 +8,13 @@ Cabal-Version:  >= 1.10
 Build-Type:     Custom
 
 Name:           stm-chans
-Version:        3.0.0.5
+Version:        3.0.0.6
 Stability:      provisional
-Homepage:       http://wrengr.org
+Homepage:       https://wrengr.org/software/hackage.html
+Bug-Reports:    https://github.com/wrengr/stm-chans/issues
 Author:         wren gayle romano, Thomas DuBuisson
 Maintainer:     wren@cpan.org
-Copyright:      Copyright (c) 2011--2021 wren gayle romano
+Copyright:      Copyright (c) 2011–2021 wren gayle romano
 License:        BSD3
 License-File:   LICENSE
 
@@ -46,7 +47,7 @@ Source-Repository head
 -- TODO: Just about makes me want to abandon our __HADDOCK__ hack.
 Custom-Setup
     Setup-Depends: base  >= 4.1  && < 5
-                 , Cabal >= 1.14 && < 3.5
+                 , Cabal >= 1.14 && < 3.7
 Library
     Default-Language: Haskell2010
     -- N.B., the following versions are required for:
