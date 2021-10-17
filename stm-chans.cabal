@@ -1,20 +1,19 @@
 ----------------------------------------------------------------
--- wren gayle romano <wren@community.haskell.org>   ~ 2015.05.30
+-- wren gayle romano <wren@community.haskell.org>   ~ 2021.10.16
 ----------------------------------------------------------------
 
--- By and large Cabal >=1.2 is fine; but >= 1.6 gives tested-with:
--- and source-repository:.
-Cabal-Version:  >= 1.6
+-- Cabal >=1.10 is required by Hackage.
+Cabal-Version:  >= 1.10
 -- We need a custom build in order to define __HADDOCK__
 Build-Type:     Custom
 
 Name:           stm-chans
 Version:        3.0.0.4
 Stability:      provisional
-Homepage:       http://code.haskell.org/~wren/
+Homepage:       http://wrengr.org
 Author:         wren gayle romano, Thomas DuBuisson
-Maintainer:     wren@community.haskell.org
-Copyright:      Copyright (c) 2011--2015 wren gayle romano
+Maintainer:     wren@cpan.org
+Copyright:      Copyright (c) 2011--2021 wren gayle romano
 License:        BSD3
 License-File:   LICENSE
 
@@ -22,17 +21,28 @@ Category:       Concurrency
 Synopsis:       Additional types of channels for STM.
 Description:    Additional types of channels for STM.
 
--- Should probably still work with GHC-7.6.1 too
-Tested-With:
-    GHC ==7.8.3, GHC ==7.10.1
 Extra-source-files:
-    AUTHORS, README, CHANGELOG
+    AUTHORS, README.md, CHANGELOG
+
+-- This used to be tested on 7.8.3 and 7.10.1, but we don't verify that by CI.
+-- <https://github.com/wrengr/bytestring-trie/actions?query=workflow%3Aci>
+Tested-With:
+    GHC ==8.0.2,
+    GHC ==8.2.2,
+    GHC ==8.4.4,
+    GHC ==8.6.5,
+    GHC ==8.8.4,
+    GHC ==8.10.3,
+    GHC ==9.0.1
+
+----------------------------------------------------------------
 Source-Repository head
-    Type:     darcs
-    Location: http://community.haskell.org/~wren/stm-chans
+    Type:     git
+    Location: https://github.com/wrengr/stm-chans.git
 
 ----------------------------------------------------------------
 Library
+    Default-Language: Haskell2010
     -- N.B., the following versions are required for:
     -- * stm >= 2.4:   T{,B}Queue and newBroadcastTChan{,IO}
     -- * stm >= 2.3.0: fast tryReadTChan, peekTChan, tryPeekTChan,

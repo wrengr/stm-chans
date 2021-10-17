@@ -1,9 +1,8 @@
 stm-chans
 =========
 [![Hackage version](https://img.shields.io/hackage/v/stm-chans.svg?style=flat)](https://hackage.haskell.org/package/stm-chans) 
-[![Hackage-Deps](https://img.shields.io/hackage-deps/v/stm-chans.svg?style=flat)](http://packdeps.haskellers.com/specific?package=stm-chans)
-[![TravisCI Build Status](https://img.shields.io/travis/wrengr/stm-chans.svg?style=flat)](https://travis-ci.org/wrengr/stm-chans) 
-[![CircleCI Build Status](https://circleci.com/gh/wrengr/stm-chans.svg?style=shield&circle-token=b57517657c556be6fd8fca92b843f9e4cffaf8d1)](https://circleci.com/gh/wrengr/stm-chans)
+[![Build Status](https://github.com/wrengr/stm-chans/workflows/ci/badge.svg)](https://github.com/wrengr/stm-chans/actions?query=workflow%3Aci)
+[![Dependencies](https://img.shields.io/hackage-deps/v/stm-chans.svg?style=flat)](http://packdeps.haskellers.com/specific?package=stm-chans)
 
 This package offers a collection of channel types, similar to
 `Control.Concurrent.STM.{TChan,TQueue}` but with additional features.
@@ -49,11 +48,8 @@ step is also optional.
 
 ## Links
 
-* [Website](http://cl.indiana.edu/~wren/)
+* [Website](http://wrengr.org/)
 * [Blog](http://winterkoninkje.dreamwidth.org/)
 * [Twitter](https://twitter.com/wrengr)
 * [Hackage](http://hackage.haskell.org/package/stm-chans)
-* [Darcs](http://code.haskell.org/~wren/stm-chans)
-* [GitHub (clone)](https://github.com/wrengr/stm-chans)
-* [Haddock (Darcs version)
-    ](http://code.haskell.org/~wren/stm-chans/dist/doc/html/stm-chans)
+* [GitHub](https://github.com/wrengr/stm-chans)
