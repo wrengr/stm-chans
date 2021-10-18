@@ -1,12 +1,12 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
 ----------------------------------------------------------------
---                                                    2011.04.17
+--                                                    2021.10.17
 -- |
 -- Module      :  Control.Concurrent.STM.TBChan1
--- Copyright   :  Copyright (c) 2011 wren gayle romano
+-- Copyright   :  Copyright (c) 2011--2021 wren gayle romano
 -- License     :  BSD
--- Maintainer  :  wren@community.haskell.org
+-- Maintainer  :  wren@cpan
 -- Stability   :  experimental
 -- Portability :  non-portable (GHC STM, DeriveDataTypeable)
 --
@@ -41,12 +41,6 @@ import Data.Typeable     (Typeable)
 import Control.Monad.STM (STM, retry)
 import Control.Concurrent.STM.TVar.Compat
 import Control.Concurrent.STM.TChan.Compat -- N.B., GHC only
-
--- N.B., we need a Custom cabal build-type for this to work.
-#ifdef __HADDOCK__
-import Control.Monad.STM (atomically)
-import System.IO.Unsafe  (unsafePerformIO)
-#endif
 ----------------------------------------------------------------
 
 -- | @TBChan@ is an abstract type representing a bounded FIFO
@@ -67,8 +61,9 @@ newTBChan n = do
 
 
 -- | @IO@ version of 'newTBChan'. This is useful for creating
--- top-level @TBChan@s using 'unsafePerformIO', because using
--- 'atomically' inside 'unsafePerformIO' isn't possible.
+-- top-level @TBChan@s using 'System.IO.Unsafe.unsafePerformIO',
+-- because using 'Control.Monad.STM.atomically' inside
+-- 'System.IO.Unsafe.unsafePerformIO' isn't possible.
 newTBChanIO :: Int -> IO (TBChan a)
 newTBChanIO n = do
     limit <- newTVarIO n

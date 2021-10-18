@@ -1,26 +1,28 @@
 ----------------------------------------------------------------
--- wren gayle romano <wren@community.haskell.org>   ~ 2011.04.17
+-- wren gayle romano <wren@cpan.org>                ~ 2021.10.17
 ----------------------------------------------------------------
+
+-- Cabal >=1.10 is required by Hackage.
+Cabal-Version:  >= 1.10
+Build-Type:     Simple
 
 Name:           stm-chans-bench
 Version:        1.2.0
--- Source-Repository requires version 1.6
-Cabal-Version:  >= 1.6
-Build-Type:     Simple
 Stability:      experimental
-Copyright:      Copyright (c) 2011 wren gayle romano
+Copyright:      Copyright (c) 2011–2021 wren gayle romano
 License:        BSD3
 License-File:   ../../LICENSE
 Author:         wren gayle romano
-Maintainer:     wren@community.haskell.org
-Homepage:       http://code.haskell.org/~wren/
+Maintainer:     wren@cpan.org
+Homepage:       https://wrengr.org/software/hackage.html
+Bug-Reports:    https://github.com/wrengr/stm-chans/issues
 Category:       Concurrency
 Synopsis:       Additional types of channels for STM.
 Description:    Additional types of channels for STM.
 
 Source-Repository head
-    Type:     darcs
-    Location: http://community.haskell.org/~wren/stm-chans
+    Type:     git
+    Location: https://github.com/wrengr/stm-chans.git
 
 ----------------------------------------------------------------
 Flag threaded
@@ -35,6 +37,7 @@ Flag threaded
 
 ----------------------------------------------------------------
 Executable bench-TBChan
+    Default-Language: Haskell2010
     GHC-Options: -fforce-recomp
     if flag(threaded)
         GHC-Options: -threaded
