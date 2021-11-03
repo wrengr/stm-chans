@@ -1,3 +1,6 @@
+3.0.0.7 (2021-11-22):
+    - Added `Tested-With: GHC == 9.2.1` (didn't actually need to
+      nudge the upper bound on 'base', because it's already lenient)
 3.0.0.6 (2021-10-17):
     - Removed old __HADDOCK__ hack
     - Updating stale emails, urls, etc

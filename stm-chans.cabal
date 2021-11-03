@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- wren gayle romano <wren@cpan.org>                ~ 2021.10.17
+-- wren gayle romano <wren@cpan.org>                ~ 2021.11.02
 ----------------------------------------------------------------
 
 -- Cabal >=1.10 is required by Hackage.
@@ -7,7 +7,7 @@ Cabal-Version:  >= 1.10
 Build-Type:     Simple
 
 Name:           stm-chans
-Version:        3.0.0.6
+Version:        3.0.0.7
 Stability:      provisional
 Homepage:       https://wrengr.org/software/hackage.html
 Bug-Reports:    https://github.com/wrengr/stm-chans/issues
@@ -33,7 +33,8 @@ Tested-With:
     GHC ==8.6.5,
     GHC ==8.8.4,
     GHC ==8.10.3,
-    GHC ==9.0.1
+    GHC ==9.0.1,
+    GHC ==9.2.1
 
 ----------------------------------------------------------------
 Source-Repository head
