@@ -2,7 +2,7 @@
 
 The stm-chans package was written (predominantly) by wren gayle romano
 and is released under the terms in the LICENSE file. I would also
-like to give thanks to the following contributers:
+like to give thanks to the following contributors:
 
 Thomas DuBuisson --- For important improvements to TBChan and
     TBMChan, incorporating parts of his bounded-tchan package. These
