@@ -1,8 +1,9 @@
 stm-chans
 =========
+[![CI Status](https://github.com/wrengr/stm-chans/actions/workflows/ci.yml/badge.svg)](https://github.com/wrengr/stm-chans/actions?query=workflow%3Aci+-event%3Apull_request)
 [![Hackage version](https://img.shields.io/hackage/v/stm-chans.svg?style=flat)](https://hackage.haskell.org/package/stm-chans) 
-[![Build Status](https://github.com/wrengr/stm-chans/workflows/ci/badge.svg)](https://github.com/wrengr/stm-chans/actions?query=workflow%3Aci)
-[![Dependencies](https://img.shields.io/hackage-deps/v/stm-chans.svg?style=flat)](http://packdeps.haskellers.com/specific?package=stm-chans)
+[![Stackage LTS version](https://stackage.org/package/stm-chans/badge/lts)](https://stackage.org/lts/package/stm-chans)
+[![Stackage Nightly version](https://stackage.org/package/stm-chans/badge/nightly)](https://stackage.org/nightly/package/stm-chans)
 
 This package offers a collection of channel types, similar to
 `Control.Concurrent.STM.{TChan,TQueue}` but with additional features.
