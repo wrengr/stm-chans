@@ -1,8 +1,8 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP #-}
 
-#if __GLASGOW_HASKELL__ < 914
--- ghc-9.14: "all types now auto-derive Typeable"
+#if __GLASGOW_HASKELL__ < 912
+-- ghc-9.12: "all types now auto-derive Typeable"
 {-# LANGUAGE DeriveDataTypeable #-}
 #endif
 
@@ -50,7 +50,7 @@ module Control.Concurrent.STM.TBChan
     ) where
 
 import Prelude           hiding (reads)
-#if __GLASGOW_HASKELL__ < 914
+#if __GLASGOW_HASKELL__ < 912
 import Data.Typeable     (Typeable)
 #endif
 import Control.Monad.STM (STM, retry)
@@ -64,7 +64,7 @@ data TBChan a = TBChan
     {-# UNPACK #-} !(TVar Int)
     {-# UNPACK #-} !(TVar Int)
     {-# UNPACK #-} !(TChan a)
-#if __GLASGOW_HASKELL__ < 914
+#if __GLASGOW_HASKELL__ < 912
     deriving (Typeable)
 #endif
 -- The components are:

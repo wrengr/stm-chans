@@ -1,8 +1,8 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
 {-# LANGUAGE CPP #-}
 
-#if __GLASGOW_HASKELL__ < 914
--- ghc-9.14: "all types now auto-derive Typeable"
+#if __GLASGOW_HASKELL__ < 912
+-- ghc-9.12: "all types now auto-derive Typeable"
 {-# LANGUAGE DeriveDataTypeable #-}
 #endif
 
@@ -48,7 +48,7 @@ module Control.Concurrent.STM.TMQueue
     , isEmptyTMQueue
     ) where
 
-#if __GLASGOW_HASKELL__ < 914
+#if __GLASGOW_HASKELL__ < 912
 import Data.Typeable       (Typeable)
 #endif
 #if __GLASGOW_HASKELL__ < 710
@@ -64,7 +64,7 @@ import Control.Concurrent.STM.TQueue -- N.B., GHC only
 data TMQueue a = TMQueue
     {-# UNPACK #-} !(TVar Bool)
     {-# UNPACK #-} !(TQueue a)
-#if __GLASGOW_HASKELL__ < 914
+#if __GLASGOW_HASKELL__ < 912
     deriving Typeable
 #endif
 
