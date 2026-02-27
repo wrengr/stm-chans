@@ -1,3 +1,6 @@
+3.0.0.11 (2026-02-26):
+    - Updating the `Tested-With` field for ghc 9.14 (didn't actually need to
+      nudge the upper bound on 'base', because it's already lenient)
 3.0.0.10 (2024-08-28):
     - Updating the `Tested-With` field for ghc 9.10 (didn't actually need to
       nudge the upper bound on 'base', because it's already lenient)
