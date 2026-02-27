@@ -1,14 +1,19 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
-{-# LANGUAGE CPP, DeriveDataTypeable #-}
+{-# LANGUAGE CPP #-}
+
+#if __GLASGOW_HASKELL__ < 914
+-- ghc-9.14: "all types now auto-derive Typeable"
+{-# LANGUAGE DeriveDataTypeable #-}
+#endif
 
 #if __GLASGOW_HASKELL__ >= 701
 {-# LANGUAGE Safe #-}
 #endif
 ----------------------------------------------------------------
---                                                    2021.10.17
+--                                                    2026-02-26
 -- |
 -- Module      :  Control.Concurrent.STM.TMChan
--- Copyright   :  Copyright (c) 2011--2021 wren gayle romano
+-- Copyright   :  Copyright (c) 2011--2026 wren gayle romano
 -- License     :  BSD
 -- Maintainer  :  wren@cpan.org
 -- Stability   :  provisional
@@ -44,7 +49,9 @@ module Control.Concurrent.STM.TMChan
     , isEmptyTMChan
     ) where
 
+#if __GLASGOW_HASKELL__ < 914
 import Data.Typeable       (Typeable)
+#endif
 #if __GLASGOW_HASKELL__ < 710
 import Control.Applicative ((<$>))
 #endif
@@ -58,7 +65,9 @@ import Control.Concurrent.STM.TChan -- N.B., GHC only
 data TMChan a = TMChan
     {-# UNPACK #-} !(TVar Bool)
     {-# UNPACK #-} !(TChan a)
+#if __GLASGOW_HASKELL__ < 914
     deriving Typeable
+#endif
 
 
 -- | Build and returns a new instance of @TMChan@.

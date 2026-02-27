@@ -1,14 +1,19 @@
 {-# OPTIONS_GHC -Wall -fwarn-tabs #-}
-{-# LANGUAGE CPP, DeriveDataTypeable #-}
+{-# LANGUAGE CPP #-}
+
+#if __GLASGOW_HASKELL__ < 914
+-- ghc-9.14: "all types now auto-derive Typeable"
+{-# LANGUAGE DeriveDataTypeable #-}
+#endif
 
 #if __GLASGOW_HASKELL__ >= 701
 {-# LANGUAGE Safe #-}
 #endif
 ----------------------------------------------------------------
---                                                    2021.10.17
+--                                                    2026-02-26
 -- |
 -- Module      :  Control.Concurrent.STM.TBChan
--- Copyright   :  Copyright (c) 2011--2021 wren gayle romano
+-- Copyright   :  Copyright (c) 2011--2026 wren gayle romano
 -- License     :  BSD
 -- Maintainer  :  wren@cpan.org
 -- Stability   :  provisional
@@ -45,7 +50,9 @@ module Control.Concurrent.STM.TBChan
     ) where
 
 import Prelude           hiding (reads)
+#if __GLASGOW_HASKELL__ < 914
 import Data.Typeable     (Typeable)
+#endif
 import Control.Monad.STM (STM, retry)
 import Control.Concurrent.STM.TVar
 import Control.Concurrent.STM.TChan -- N.B., GHC only
@@ -57,7 +64,9 @@ data TBChan a = TBChan
     {-# UNPACK #-} !(TVar Int)
     {-# UNPACK #-} !(TVar Int)
     {-# UNPACK #-} !(TChan a)
+#if __GLASGOW_HASKELL__ < 914
     deriving (Typeable)
+#endif
 -- The components are:
 -- * How many free slots we /know/ we have available.
 -- * How many slots have been freed up by successful reads since
